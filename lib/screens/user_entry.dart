@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:talky/routes/route_names.dart';
 import 'package:talky/utilities/app_colors.dart';
+import 'package:talky/widgets/button.dart';
 import 'package:talky/widgets/divider.dart';
 import 'package:talky/widgets/logo.dart';
 import 'package:talky/widgets/suggest.dart';
@@ -23,25 +24,11 @@ class UserEntry extends StatelessWidget {
                   dark: true,
                 ),
                 const Spacer(),
-                MaterialButton(
+                Button(
                   onPressed: () {},
+                  text: 'Sign in with Google',
+                  imagePath: 'assets/images/iconGoogle.png',
                   color: AppColors.backgroundColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  minWidth: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset(
-                        'assets/images/iconGoogle.png',
-                        height: 24,
-                      ),
-                      const SizedBox(width: 8),
-                      const Text('Sign in with Google'),
-                    ],
-                  ),
                 ),
                 const SizedBox(
                   height: 38,
@@ -50,27 +37,13 @@ class UserEntry extends StatelessWidget {
                 const SizedBox(
                   height: 38,
                 ),
-                MaterialButton(
+                Button(
                   onPressed: () {
                     Navigator.pushNamed(context, RouteNames.auth);
                   },
+                  text: 'Continue with Email',
+                  imagePath: 'assets/images/lets-icons_e-mail.png',
                   color: AppColors.backgroundColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  minWidth: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset(
-                        'assets/images/lets-icons_e-mail.png',
-                        height: 24,
-                      ),
-                      const SizedBox(width: 8),
-                      const Text('Continue with main'),
-                    ],
-                  ),
                 ),
                 const SizedBox(
                   height: 38,
