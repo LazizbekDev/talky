@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/providers/auth_provider.dart';
-import 'package:talky/screens/login_layout.dart';
+import 'package:talky/layouts/login_layout.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/button.dart';
 import 'package:talky/widgets/forgot_password.dart';
 import 'package:talky/widgets/input.dart';
 import 'package:talky/widgets/suggest.dart';
 
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  AuthScreenState createState() => AuthScreenState();
+  SignUpState createState() => SignUpState();
 }
 
-class AuthScreenState extends State<AuthScreen> {
+class SignUpState extends State<SignUp> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscureText = false;
