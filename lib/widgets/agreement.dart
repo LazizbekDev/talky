@@ -30,7 +30,6 @@ class Agreement extends StatelessWidget {
                   text: 'terms & conditions',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
-                    color: Colors.grey,
                   ),
                 ),
               ],

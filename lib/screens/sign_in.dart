@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/layouts/login_layout.dart';
 import 'package:talky/utilities/app_colors.dart';
+import 'package:talky/utilities/status.dart';
+import 'package:talky/widgets/agreement.dart';
 import 'package:talky/widgets/button.dart';
 import 'package:talky/widgets/forgot_password.dart';
 import 'package:talky/widgets/input.dart';
@@ -19,6 +21,8 @@ class SignIn extends StatefulWidget {
 }
 
 class SignInState extends State<SignIn> {
+  bool signIn = true;
+  bool termAndConditions = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscureText = false;
@@ -56,7 +60,7 @@ class SignInState extends State<SignIn> {
       ),
       body: LoginLayout(
         caption: Text(
-          "Sign in with mail",
+          "Sign ${signIn ? "in" : "up"} with mail",
           style: GoogleFonts.inter(
             fontWeight: FontWeight.w600,
             fontSize: 18,
@@ -64,13 +68,14 @@ class SignInState extends State<SignIn> {
           ),
         ),
         email: Input(
+          obscureText: false,
           controller: _emailController,
           hintText: 'Email',
         ),
         password: Input(
           controller: _passwordController,
           obscureText: _obscureText,
-          hintText: 'Enter your password',
+          hintText: 'Enter ${signIn ? 'your' : 'new'} password',
           suffixIcon: IconButton(
             icon: Icon(
               _obscureText ? Icons.visibility : Icons.visibility_off,
@@ -79,9 +84,23 @@ class SignInState extends State<SignIn> {
             onPressed: _togglePasswordVisibility,
           ),
         ),
-        forgotPassword: ForgotPassword(
-          onPressed: () {},
-        ),
+        forgotPassword: signIn
+            ? ForgotPassword(
+                onPressed: () {},
+              )
+            : Agreement(
+                isChecked: termAndConditions,
+                onChanged: (bool? e) {
+                  setState(() {
+                    termAndConditions = e ?? false;
+                  });
+                },
+                onTermsPressed: () {
+                  setState(() {
+                    termAndConditions = !termAndConditions;
+                  });
+                },
+              ),
         button: Button(
           onPressed: () async {
             debugPrint(_emailController.text);
@@ -102,10 +121,22 @@ class SignInState extends State<SignIn> {
               );
             }
           },
-          text: 'Sign in',
+          text: signIn ? 'Sign in' : 'Sign up',
           color: AppColors.primaryColor,
+          status: (!signIn && termAndConditions)
+              ? Status.enabled
+              : (!signIn && !termAndConditions)
+                  ? Status.disabled
+                  : Status.enabled,
         ),
-        suggestion: const Suggest(login: true),
+        suggestion: Suggest(
+          login: signIn,
+          onTap: () {
+            setState(() {
+              signIn = !signIn;
+            });
+          },
+        ),
       ),
     );
   }

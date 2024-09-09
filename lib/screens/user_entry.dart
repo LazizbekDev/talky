@@ -48,8 +48,9 @@ class UserEntry extends StatelessWidget {
                 const SizedBox(
                   height: 38,
                 ),
-                const Suggest(
+                Suggest(
                   login: true,
+                  onTap: () {},
                 )
               ],
             ),

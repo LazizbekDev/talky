@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:talky/utilities/app_colors.dart';
+import 'package:talky/utilities/status.dart';
 
 class Button extends StatelessWidget {
   final VoidCallback onPressed;
@@ -8,6 +10,7 @@ class Button extends StatelessWidget {
   final double padding;
   final double borderRadius;
   final double fontSize;
+  final Status status;
 
   const Button({
     super.key,
@@ -18,12 +21,15 @@ class Button extends StatelessWidget {
     this.padding = 18.0,
     this.borderRadius = 8.0,
     this.fontSize = 16,
+    this.status = Status.enabled,
   });
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      onPressed: onPressed,
+      onPressed: status == Status.enabled
+          ? onPressed
+          : null,
       color: color,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(borderRadius),
@@ -36,17 +42,35 @@ class Button extends StatelessWidget {
             : MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (imagePath != null) ...[
-            Image.asset(
-              imagePath!,
-              height: 24,
+          if (status == Status.loading) ...[
+            const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.0,
+                color: Colors.white,
+              ),
             ),
-            const SizedBox(width: 8),
+          ] else ...[
+            if (imagePath != null) ...[
+              Image.asset(
+                imagePath!,
+                height: 24,
+              ),
+              const SizedBox(width: 25),
+            ],
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+                color: status == Status.disabled
+                    ? AppColors.lightGray
+                    : color == AppColors.primaryColor
+                        ? AppColors.backgroundColor
+                        : AppColors.textPrimary,
+              ),
+            ),
           ],
-          Text(
-            text,
-            style: TextStyle(fontSize: fontSize),
-          ),
         ],
       ),
     );

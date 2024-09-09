@@ -4,7 +4,8 @@ import 'package:talky/utilities/app_colors.dart';
 
 class Suggest extends StatelessWidget {
   final bool login;
-  const Suggest({super.key, this.login = false});
+  final Function() onTap;
+  const Suggest({super.key, this.login = false, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class Suggest extends StatelessWidget {
           ),
         ),
         GestureDetector(
-          onTap: () {},
+          onTap: onTap,
           child: Text(
             login ? "Sign up here" : "Sign in here",
             style: GoogleFonts.inter(

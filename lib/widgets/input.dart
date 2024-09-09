@@ -11,7 +11,7 @@ class Input extends StatelessWidget {
   const Input({
     super.key,
     required this.controller,
-    this.obscureText = false,
+    this.obscureText = true,
     this.hintText = '',
     this.suffixIcon,
     this.labelText,

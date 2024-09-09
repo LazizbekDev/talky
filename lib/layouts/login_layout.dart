@@ -56,7 +56,6 @@ class LoginLayout extends StatelessWidget {
             const SizedBox(
               height: 40,
             ),
-            agreement,
             const Spacer(),
             button,
             const SizedBox(
