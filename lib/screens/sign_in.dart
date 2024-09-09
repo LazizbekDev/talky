@@ -13,15 +13,17 @@ import 'package:talky/widgets/forgot_password.dart';
 import 'package:talky/widgets/input.dart';
 import 'package:talky/widgets/suggest.dart';
 
+// ignore: must_be_immutable
 class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+  SignIn({super.key, this.signIn = true});
+  bool signIn;
 
   @override
   SignInState createState() => SignInState();
 }
 
 class SignInState extends State<SignIn> {
-  bool signIn = true;
+  // bool signIn = true;
   bool termAndConditions = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -36,6 +38,26 @@ class SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+
+    void _signIn() async {
+      debugPrint(_emailController.text);
+      debugPrint(_passwordController.text);
+      try {
+        await authProvider.signIn(
+          _emailController.text,
+          _passwordController.text,
+        );
+        Navigator.pushReplacementNamed(context, '/home');
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              e.toString(),
+            ),
+          ),
+        );
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +82,7 @@ class SignInState extends State<SignIn> {
       ),
       body: LoginLayout(
         caption: Text(
-          "Sign ${signIn ? "in" : "up"} with mail",
+          "Sign ${widget.signIn ? "in" : "up"} with mail",
           style: GoogleFonts.inter(
             fontWeight: FontWeight.w600,
             fontSize: 18,
@@ -75,7 +97,7 @@ class SignInState extends State<SignIn> {
         password: Input(
           controller: _passwordController,
           obscureText: _obscureText,
-          hintText: 'Enter ${signIn ? 'your' : 'new'} password',
+          hintText: 'Enter ${widget.signIn ? 'your' : 'new'} password',
           suffixIcon: IconButton(
             icon: Icon(
               _obscureText ? Icons.visibility : Icons.visibility_off,
@@ -84,7 +106,7 @@ class SignInState extends State<SignIn> {
             onPressed: _togglePasswordVisibility,
           ),
         ),
-        forgotPassword: signIn
+        forgotPassword: widget.signIn
             ? ForgotPassword(
                 onPressed: () {},
               )
@@ -103,37 +125,21 @@ class SignInState extends State<SignIn> {
               ),
         button: Button(
           onPressed: () async {
-            debugPrint(_emailController.text);
-            debugPrint(_passwordController.text);
-            try {
-              await authProvider.signIn(
-                _emailController.text,
-                _passwordController.text,
-              );
-              Navigator.pushReplacementNamed(context, '/home');
-            } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    e.toString(),
-                  ),
-                ),
-              );
-            }
+            _signIn();
           },
-          text: signIn ? 'Sign in' : 'Sign up',
+          text: widget.signIn ? 'Sign in' : 'Sign up',
           color: AppColors.primaryColor,
-          status: (!signIn && termAndConditions)
+          status: (!widget.signIn && termAndConditions)
               ? Status.enabled
-              : (!signIn && !termAndConditions)
+              : (!widget.signIn && !termAndConditions)
                   ? Status.disabled
                   : Status.enabled,
         ),
         suggestion: Suggest(
-          login: signIn,
+          login: widget.signIn,
           onTap: () {
             setState(() {
-              signIn = !signIn;
+              widget.signIn = !widget.signIn;
             });
           },
         ),
