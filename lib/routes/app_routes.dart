@@ -17,7 +17,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => SignIn(signIn: true));
 
     case RouteNames.verify:
-      return MaterialPageRoute(builder: (_) => const Verify());
+      final args = settings.arguments as Map<String, dynamic>?;
+      return MaterialPageRoute(
+        builder: (_) => Verify(
+          email: args?['email'],
+          password: args?['password'],
+        ),
+      );
 
     default:
       return MaterialPageRoute(builder: (_) => const Home());

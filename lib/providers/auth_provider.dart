@@ -1,3 +1,4 @@
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -24,9 +25,22 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp({
+    required String email,
+    required String password,
+    required String otp,
+  }) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      bool isVerified = EmailOTP.verifyOTP(otp: otp);
+
+      if (!isVerified) {
+        throw Exception('Invalid OTP. Please try again.');
+      }
+
+      await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
     } catch (e) {
       throw Exception(e.toString());
     }

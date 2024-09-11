@@ -1,3 +1,4 @@
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/providers/auth_provider.dart';
@@ -10,6 +11,14 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    EmailOTP.config(
+      appName: 'Talky',
+      otpType: OTPType.numeric,
+      expiry: 30000,
+      emailTheme: EmailTheme.v6,
+      appEmail: 'dev.talky@gmail.com',
+      otpLength: 4,
+    );
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(

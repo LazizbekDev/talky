@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:otp_pin_field/otp_pin_field.dart';
+import 'package:provider/provider.dart';
+import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/screens/sign_in.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/button.dart';
@@ -8,10 +10,41 @@ import 'package:talky/widgets/logo.dart';
 import 'package:talky/widgets/suggest.dart';
 
 class Verify extends StatelessWidget {
-  const Verify({super.key});
+  final String? email;
+  final String? password;
+  const Verify({super.key, this.email, this.password});
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
+    if (email == null || password == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text("No arguments passed!"),
+        ),
+      );
+    }
+
+    void signUp(pin) async {
+      try {
+        await authProvider.signUp(
+          email: email ?? "",
+          password: password ?? "",
+          otp: pin,
+        );
+        Navigator.pushReplacementNamed(context, '/home');
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              e.toString(),
+            ),
+          ),
+        );
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -73,7 +106,7 @@ class Verify extends StatelessWidget {
                 otpPinFieldDecoration:
                     OtpPinFieldDecoration.defaultPinBoxDecoration,
                 onSubmit: (String pin) {
-                  debugPrint("OTP Entered: $pin");
+                  signUp(pin);
                 },
                 onChange: (String text) {},
               ),

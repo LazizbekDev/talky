@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+// import 'package:email_otp/email_otp.dart';
+import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -39,9 +41,7 @@ class SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
-    void _signIn() async {
-      debugPrint(_emailController.text);
-      debugPrint(_passwordController.text);
+    void signIn() async {
       try {
         await authProvider.signIn(
           _emailController.text,
@@ -57,6 +57,18 @@ class SignInState extends State<SignIn> {
           ),
         );
       }
+    }
+
+    void verify() {
+      EmailOTP.sendOTP(email: _emailController.text);
+      Navigator.pushNamed(
+        context,
+        '/verify',
+        arguments: {
+          'email': _emailController.text,
+          'password': _passwordController.text,
+        },
+      );
     }
 
     return Scaffold(
@@ -125,7 +137,7 @@ class SignInState extends State<SignIn> {
               ),
         button: Button(
           onPressed: () async {
-            _signIn();
+            widget.signIn ? signIn() : verify();
           },
           text: widget.signIn ? 'Sign in' : 'Sign up',
           color: AppColors.primaryColor,
