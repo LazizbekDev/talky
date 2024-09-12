@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/routes/route_names.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/button.dart';
@@ -11,6 +13,8 @@ class UserEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       backgroundColor: AppColors.middleGray,
       body: SafeArea(
@@ -25,7 +29,9 @@ class UserEntry extends StatelessWidget {
                 ),
                 const Spacer(),
                 Button(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await authProvider.signInWithGoogle();
+                  },
                   text: 'Sign in with Google',
                   imagePath: 'assets/images/iconGoogle.png',
                   color: AppColors.backgroundColor,
