@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/providers/auth_provider.dart';
@@ -30,7 +32,23 @@ class UserEntry extends StatelessWidget {
                 const Spacer(),
                 Button(
                   onPressed: () async {
-                    await authProvider.signInWithGoogle();
+                    try {
+                      await authProvider.signInWithGoogle();
+
+                      if (authProvider.user != null) {
+                        Navigator.pushReplacementNamed(
+                            context, RouteNames.home);
+                      } else {
+                        debugPrint('Sign in failed');
+                      }
+                    } catch (e) {
+                      debugPrint('$e');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Sign-in failed. Please try again.'),
+                        ),
+                      );
+                    }
                   },
                   text: 'Sign in with Google',
                   imagePath: 'assets/images/iconGoogle.png',

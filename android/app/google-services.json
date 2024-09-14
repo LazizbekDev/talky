@@ -1,48 +1,48 @@
 {
   "project_info": {
-    "project_number": "616382962918",
-    "project_id": "talky-notlazy",
-    "storage_bucket": "talky-notlazy.appspot.com"
+    "project_number": "374353091800",
+    "project_id": "talky-test-signin",
+    "storage_bucket": "talky-test-signin.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:616382962918:android:049d921c0bfe831068ef27",
+        "mobilesdk_app_id": "1:374353091800:android:6ebb1fcbfbbf4e5d458bad",
         "android_client_info": {
           "package_name": "com.simpl.talky"
         }
       },
       "oauth_client": [
         {
-          "client_id": "616382962918-q5hqkm5s5o8sr9h5nk36hh71e9tjshem.apps.googleusercontent.com",
+          "client_id": "374353091800-kkuirgk2g1p9mitj2tgguva5ha4bmnmf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.simpl.talky",
-            "certificate_hash": "a91187c195d8e90e44f167b5045107c18ce545fc"
+            "certificate_hash": "169a670237c86334f823f3469649505c1c8c2bd1"
           }
         },
         {
-          "client_id": "616382962918-imle83klhiuetlu0jb4gjg2l65kis71k.apps.googleusercontent.com",
+          "client_id": "374353091800-brd46c4fgakp65pnhta7vrmh9q9hgp60.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBumMrxcFadN99GCYFmcDj5EzIhHujeLNo"
+          "current_key": "AIzaSyCyUg5pt6pJpYwOsffU4zQRVYQEyTPVYhk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "616382962918-imle83klhiuetlu0jb4gjg2l65kis71k.apps.googleusercontent.com",
+              "client_id": "374353091800-brd46c4fgakp65pnhta7vrmh9q9hgp60.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "616382962918-5atljn8tvhnfqh3dta2fhodb722ikm9s.apps.googleusercontent.com",
+              "client_id": "374353091800-6rle6oedqs0guro2a5p58pcg6s0mlkoc.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.talky"
+                "bundle_id": "com"
               }
             }
           ]

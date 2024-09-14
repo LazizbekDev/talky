@@ -52,7 +52,11 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> signInWithGoogle() async {
-    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    const List<String> scopes = <String>[
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ];
+    GoogleSignInAccount? googleUser = await GoogleSignIn(scopes: scopes).signIn();
 
     if (googleUser != null) {
       final GoogleSignInAuthentication googleAuth =

@@ -50,21 +50,22 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBumMrxcFadN99GCYFmcDj5EzIhHujeLNo',
-    appId: '1:616382962918:android:049d921c0bfe831068ef27',
-    messagingSenderId: '616382962918',
-    projectId: 'talky-notlazy',
-    storageBucket: 'talky-notlazy.appspot.com',
+    apiKey: 'AIzaSyCyUg5pt6pJpYwOsffU4zQRVYQEyTPVYhk',
+    appId: '1:374353091800:android:6ebb1fcbfbbf4e5d458bad',
+    messagingSenderId: '374353091800',
+    projectId: 'talky-test-signin',
+    storageBucket: 'talky-test-signin.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyChZzmLg5dRMD3H_NXy6oytx5Ch_gUlRnA',
-    appId: '1:616382962918:ios:4e2c7bd49b4ff23968ef27',
-    messagingSenderId: '616382962918',
-    projectId: 'talky-notlazy',
-    storageBucket: 'talky-notlazy.appspot.com',
-    iosClientId: '616382962918-5atljn8tvhnfqh3dta2fhodb722ikm9s.apps.googleusercontent.com',
-    iosBundleId: 'com.example.talky',
+    apiKey: 'AIzaSyBAlAcH5EO0dlvOstfb4H5UuyMBq5EpG1c',
+    appId: '1:374353091800:ios:ac65ceaa69c4e010458bad',
+    messagingSenderId: '374353091800',
+    projectId: 'talky-test-signin',
+    storageBucket: 'talky-test-signin.appspot.com',
+    androidClientId: '374353091800-kkuirgk2g1p9mitj2tgguva5ha4bmnmf.apps.googleusercontent.com',
+    iosClientId: '374353091800-6rle6oedqs0guro2a5p58pcg6s0mlkoc.apps.googleusercontent.com',
+    iosBundleId: 'com',
   );
 
 }
