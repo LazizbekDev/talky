@@ -35,7 +35,7 @@ class Verify extends StatelessWidget {
           password: password ?? "",
           otp: pin,
         );
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/profile');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

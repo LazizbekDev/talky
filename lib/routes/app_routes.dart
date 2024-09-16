@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:talky/routes/route_names.dart';
+import 'package:talky/screens/set_profile.dart';
 import 'package:talky/screens/sign_in.dart';
 import 'package:talky/screens/home.dart';
 import 'package:talky/screens/splash.dart';
@@ -25,6 +26,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           password: args?['password'],
         ),
       );
+    case RouteNames.profile:
+      return MaterialPageRoute(builder: (_) => const SetProfile());
 
     default:
       return MaterialPageRoute(builder: (_) => const Home());
