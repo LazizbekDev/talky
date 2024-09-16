@@ -56,7 +56,8 @@ class AuthProvider extends ChangeNotifier {
       'email',
       'https://www.googleapis.com/auth/contacts.readonly',
     ];
-    GoogleSignInAccount? googleUser = await GoogleSignIn(scopes: scopes).signIn();
+    GoogleSignInAccount? googleUser =
+        await GoogleSignIn(scopes: scopes).signIn();
 
     if (googleUser != null) {
       final GoogleSignInAuthentication googleAuth =
@@ -80,8 +81,13 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    await _auth.signOut();
-    _user = null;
+    try {
+      await _auth.signOut();
+      _user = null;
+      notifyListeners();
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 
   Future<void> resetPassword(String email) async {

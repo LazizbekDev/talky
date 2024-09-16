@@ -63,7 +63,7 @@ class UserEntry extends StatelessWidget {
                 ),
                 Button(
                   onPressed: () {
-                    Navigator.pushNamed(context, RouteNames.auth);
+                    Navigator.pushNamed(context, RouteNames.auth, arguments: true);
                   },
                   text: 'Continue with Email',
                   imagePath: 'assets/images/lets-icons_e-mail.png',
@@ -74,7 +74,9 @@ class UserEntry extends StatelessWidget {
                 ),
                 Suggest(
                   login: true,
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, RouteNames.auth, arguments: false);
+                  },
                 )
               ],
             ),
