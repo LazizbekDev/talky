@@ -1,7 +1,7 @@
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:talky/screens/home.dart';
+// import 'package:talky/screens/home.dart';
 import 'package:talky/screens/set_profile.dart';
 import 'package:talky/screens/user_entry.dart';
 import 'package:talky/utilities/app_colors.dart';

@@ -1,4 +1,5 @@
 import 'package:email_otp/email_otp.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -6,10 +7,13 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
+  bool _isUploading = false;
 
   User? get user => _user;
 
   bool get isAuthenticated => _user != null;
+
+  bool get isUploading => _isUploading;
 
   AuthProvider() {
     _auth.authStateChanges().listen((User? user) {
@@ -77,6 +81,29 @@ class AuthProvider extends ChangeNotifier {
         }
         throw Exception(e.toString());
       }
+    }
+  }
+
+  Future<void> uploadUserInfoToFireStore(selectedImage) async {
+    try {
+      _isUploading = true;
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('user_images')
+          .child('${user!.uid}.jpg');
+
+      SettableMetadata metadata = SettableMetadata(
+        contentType: 'image/jpeg',
+      );
+
+      await storageRef.putFile(selectedImage, metadata);
+      final imageUrl = await storageRef.getDownloadURL();
+      debugPrint(imageUrl);
+      _isUploading = false;
+      notifyListeners();
+    } catch (err) {
+      debugPrint('err: $err');
+      throw Error();
     }
   }
 

@@ -14,8 +14,8 @@ class App extends StatelessWidget {
     EmailOTP.config(
       appName: 'Talky',
       otpType: OTPType.numeric,
-      expiry: 30000,
-      emailTheme: EmailTheme.v6,
+      expiry: 60000*5,
+      emailTheme: EmailTheme.v6, 
       appEmail: 'dev.talky@gmail.com',
       otpLength: 4,
     );

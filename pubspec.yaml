@@ -8,7 +8,9 @@ environment:
 
 dependencies:
   another_flutter_splash_screen: ^1.2.1
+  # cloud_firestore: ^4.17.5
   email_otp: ^3.0.2
+  firebase_app_check: ^0.2.2
   firebase_auth: ^4.16.0
   firebase_core: ^2.24.2
   firebase_storage: ^11.6.5

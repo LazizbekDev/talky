@@ -31,7 +31,7 @@ class Input extends StatelessWidget {
           fontSize: 14,
         ),
         suffixIcon: suffixIcon,
-        border: const OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(8),
           ),

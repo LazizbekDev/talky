@@ -5,7 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:talky/utilities/app_colors.dart';
 
 class UserImagePicker extends StatefulWidget {
-  const UserImagePicker({super.key});
+  const UserImagePicker({super.key, required this.onPickImage});
+  final Function(File? pickedImage) onPickImage;
 
   @override
   State<UserImagePicker> createState() => _UserImagePickerState();
@@ -27,6 +28,8 @@ class _UserImagePickerState extends State<UserImagePicker> {
     setState(() {
       _pickedImageFile = File(pickedImage.path);
     });
+
+    widget.onPickImage(_pickedImageFile);
   }
 
   @override
@@ -43,14 +46,14 @@ class _UserImagePickerState extends State<UserImagePicker> {
             child: Icon(
               Icons.person,
               size: 50,
-              color: Colors.grey[600], // Icon color
+              color: Colors.grey[600],
             ),
           ),
           const Positioned(
             bottom: 10,
             right: 10,
             child: CircleAvatar(
-              radius: 25, // Size of the edit icon
+              radius: 25,
               backgroundColor: Colors.blue,
               child: Icon(
                 Icons.edit,
