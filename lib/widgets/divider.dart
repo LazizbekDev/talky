@@ -7,33 +7,28 @@ class DividerWithText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const SizedBox(
-          width: 30,
-        ),
         const Expanded(
           child: Divider(
+            indent: 30,
             color: Colors.grey,
             thickness: 1,
+            endIndent: 8,
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            'OR',
-            style: TextStyle(
-              color: Colors.grey[700],
-              fontWeight: FontWeight.bold,
-            ),
+        Text(
+          'OR',
+          style: TextStyle(
+            color: Colors.grey[700],
+            fontWeight: FontWeight.bold,
           ),
         ),
         const Expanded(
           child: Divider(
+            indent: 8,
+            endIndent: 30,
             color: Colors.grey,
             thickness: 1,
           ),
-        ),
-        const SizedBox(
-          width: 30,
         ),
       ],
     );

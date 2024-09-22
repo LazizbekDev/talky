@@ -26,7 +26,28 @@ class _SetProfileState extends State<SetProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<AuthProvider>(context);
+    final userProvider = Provider.of<AuthProvider>(context, listen: true);
+
+    void complete() async {
+      if (selectedImage == null) {
+        debugPrint('No image selected');
+      } else if (nickNameController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter your nickname.')),
+        );
+      } else {
+        debugPrint('Image selected: ${selectedImage!.path}');
+        File imageFile = File(selectedImage!.path);
+        await userProvider.uploadUserInfoToFireStore(
+          selectedImage: imageFile,
+          nick: nickNameController.text,
+          description: bioController.text,
+        );
+
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(context, RouteNames.home);
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -113,23 +134,7 @@ class _SetProfileState extends State<SetProfile> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Button(
-                          onPressed: () async {
-                            if (selectedImage == null) {
-                              debugPrint('No image selected');
-                            } else {
-                              debugPrint(
-                                  'Image selected: ${selectedImage!.path}');
-                              File imageFile = File(selectedImage!.path);
-                              await userProvider.uploadUserInfoToFireStore(
-                                imageFile,
-                              );
-                              // ignore: use_build_context_synchronously
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('Profile Updated')),
-                              );
-                            }
-                          },
+                          onPressed: complete,
                           text: "Complete",
                           status: userProvider.isUploading
                               ? Status.loading

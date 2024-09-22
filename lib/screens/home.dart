@@ -12,13 +12,32 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Talky',
-          style: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: AppColors.primaryColor,
+        leading: Container(
+          width: 24,
+          margin: const EdgeInsets.only(left: 18),
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color(0xFFE5F1FF),
           ),
+          child: IconButton(
+            icon: Image.asset(
+              'assets/images/pop.png',
+              width: 14,
+            ),
+            onPressed: () {},
+          ),
+        ),
+        title: Row(
+          children: [
+            Text(
+              'Talky',
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: AppColors.primaryColor,
+              ),
+            ),
+          ],
         ),
         actions: [
           IconButton(

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,10 @@ class AuthProvider extends ChangeNotifier {
   bool get isAuthenticated => _user != null;
 
   bool get isUploading => _isUploading;
+  void setIsUploading(bool value) {
+    _isUploading = value;
+    notifyListeners();
+  }
 
   AuthProvider() {
     _auth.authStateChanges().listen((User? user) {
@@ -84,9 +89,15 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> uploadUserInfoToFireStore(selectedImage) async {
+  Future<void> uploadUserInfoToFireStore(
+      {selectedImage, nick, description}) async {
     try {
-      _isUploading = true;
+      setIsUploading(true);
+
+      if (nick.isEmpty) {
+        throw Exception('Please enter your nickname.');
+      }
+
       final storageRef = FirebaseStorage.instance
           .ref()
           .child('user_images')
@@ -98,12 +109,20 @@ class AuthProvider extends ChangeNotifier {
 
       await storageRef.putFile(selectedImage, metadata);
       final imageUrl = await storageRef.getDownloadURL();
+
+      await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
+        'email': user?.email,
+        'image_url': imageUrl,
+        'nick': nick,
+        'description': description,
+      });
+
       debugPrint(imageUrl);
-      _isUploading = false;
+      setIsUploading(false);
       notifyListeners();
     } catch (err) {
       debugPrint('err: $err');
-      throw Error();
+      throw Exception(err);
     }
   }
 

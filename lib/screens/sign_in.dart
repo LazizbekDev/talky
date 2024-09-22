@@ -93,12 +93,15 @@ class SignInState extends State<SignIn> {
         ),
       ),
       body: LoginLayout(
-        caption: Text(
-          "Sign ${widget.signIn ? "in" : "up"} with mail",
-          style: GoogleFonts.inter(
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
-            color: AppColors.textPrimary,
+        caption: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 40),
+          child: Text(
+            "Sign ${widget.signIn ? "in" : "up"} with mail",
+            style: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: AppColors.textPrimary,
+            ),
           ),
         ),
         email: Input(
@@ -106,16 +109,19 @@ class SignInState extends State<SignIn> {
           controller: _emailController,
           hintText: 'Email',
         ),
-        password: Input(
-          controller: _passwordController,
-          obscureText: _obscureText,
-          hintText: 'Enter ${widget.signIn ? 'your' : 'new'} password',
-          suffixIcon: IconButton(
-            icon: Icon(
-              _obscureText ? Icons.visibility : Icons.visibility_off,
-              color: Colors.grey,
+        password: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          child: Input(
+            controller: _passwordController,
+            obscureText: _obscureText,
+            hintText: 'Enter ${widget.signIn ? 'your' : 'new'} password',
+            suffixIcon: IconButton(
+              icon: Icon(
+                _obscureText ? Icons.visibility : Icons.visibility_off,
+                color: Colors.grey,
+              ),
+              onPressed: _togglePasswordVisibility,
             ),
-            onPressed: _togglePasswordVisibility,
           ),
         ),
         forgotPassword: widget.signIn
