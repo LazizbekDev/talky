@@ -45,7 +45,7 @@ class _SetProfileState extends State<SetProfile> {
         );
 
         // ignore: use_build_context_synchronously
-        Navigator.pushNamed(context, RouteNames.home);
+        Navigator.pushNamed(context, RouteNames.chat);
       }
     }
 

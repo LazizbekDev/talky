@@ -3,17 +3,14 @@ import 'package:talky/routes/route_names.dart';
 import 'package:talky/screens/chat.dart';
 import 'package:talky/screens/set_profile.dart';
 import 'package:talky/screens/sign_in.dart';
-import 'package:talky/screens/home.dart';
 import 'package:talky/screens/splash.dart';
+import 'package:talky/screens/user_entry.dart';
 import 'package:talky/screens/verify.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case RouteNames.splash:
       return MaterialPageRoute(builder: (_) => const Splash());
-
-    case RouteNames.home:
-      return MaterialPageRoute(builder: (_) => const Home());
 
     case RouteNames.auth:
       final args = settings.arguments as bool;
@@ -31,9 +28,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const SetProfile());
 
     case RouteNames.chat:
-      return MaterialPageRoute(builder: (_) => Chat());
+      return MaterialPageRoute(builder: (_) => const Chat());
 
     default:
-      return MaterialPageRoute(builder: (_) => const Home());
+      return MaterialPageRoute(builder: (_) => const UserEntry());
   }
 }

@@ -37,7 +37,7 @@ class UserEntry extends StatelessWidget {
 
                       if (authProvider.user != null) {
                         Navigator.pushReplacementNamed(
-                            context, RouteNames.home);
+                            context, RouteNames.chat);
                       } else {
                         debugPrint('Sign in failed');
                       }
