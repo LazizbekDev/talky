@@ -53,46 +53,45 @@ class _SetProfileState extends State<SetProfile> {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, RouteNames.home);
-              },
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: const Color(0xFF7272DB).withOpacity(0.1),
-                    child: Image.asset(
-                      "assets/images/pop.png",
-                      width: 20,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Back',
-                    style: GoogleFonts.inter(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                ],
-              ),
+        leading: Container(
+          width: 24,
+          margin: const EdgeInsets.only(left: 18),
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color(0xFFE5F1FF),
+          ),
+          child: IconButton(
+            icon: Image.asset(
+              'assets/images/pop.png',
+              width: 14,
             ),
-            const Spacer(),
-            Text(
-              'Profile',
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const Spacer(),
-            const Spacer(),
-          ],
+            onPressed: () {},
+          ),
         ),
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(
+            'Back',
+            style: GoogleFonts.inter(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: AppColors.primaryColor,
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Text(
+                'Profile',
+                style: GoogleFonts.inter(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 70),
+        ]),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {

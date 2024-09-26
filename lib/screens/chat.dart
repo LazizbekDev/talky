@@ -1,59 +1,79 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Chat extends StatefulWidget {
+class Chat extends StatelessWidget {
   const Chat({super.key});
 
-  @override
-  State<Chat> createState() => _ChatState();
-}
+  Future<Map<String, dynamic>?> fetchUserProfile() async {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) {
+        await FirebaseAuth.instance
+            .authStateChanges()
+            .firstWhere((user) => user != null);
+      }
 
-class _ChatState extends State<Chat> {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      if (userDoc.exists) {
+        return userDoc.data();
+      } else {
+        debugPrint('User not found');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Failed to fetch user profile: $e');
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> _fetchProfile() async {
+    return await fetchUserProfile();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundImage: const AssetImage('assets/images/lets-icons_e-mail.png')
-                      as ImageProvider,
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  width: 12,
-                  height: 12,
-                  decoration: const BoxDecoration(
-                    color: Colors.green,
-                    shape: BoxShape.circle,
-                  ),
+      body: SafeArea(
+        child: FutureBuilder<Map<String, dynamic>?>(
+          future: _fetchProfile(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (snapshot.hasError) {
+              return const Center(child: Text('Error loading profile'));
+            }
+
+            if (!snapshot.hasData || snapshot.data == null) {
+              return const Center(child: Text('No profile found'));
+            }
+
+            final userData = snapshot.data!;
+            final profileImageUrl = userData['image_url'];
+
+            return Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: profileImageUrl != null
+                      ? NetworkImage(profileImageUrl)
+                      : null,
+                  child:
+                      profileImageUrl == null ? const Icon(Icons.person) : null,
                 ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            const Text(
-              'Chats',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-              },
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
-      body: const Center(
-        child: Text('Your Home Page Content'),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.chat),
       ),
     );
   }

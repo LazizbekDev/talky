@@ -9,12 +9,13 @@ class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
   bool _isUploading = false;
+  String? _profileImageUrl;
 
   User? get user => _user;
-
   bool get isAuthenticated => _user != null;
-
   bool get isUploading => _isUploading;
+  String? get profileImageUrl => _profileImageUrl;
+
   void setIsUploading(bool value) {
     _isUploading = value;
     notifyListeners();
