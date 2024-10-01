@@ -36,10 +36,16 @@ class UserEntry extends StatelessWidget {
                       await authProvider.signInWithGoogle();
 
                       if (authProvider.user != null) {
-                        Navigator.pushReplacementNamed(
-                            context, RouteNames.chat);
+                        WidgetsBinding.instance.addPostFrameCallback(
+                          (_) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              RouteNames.chat,
+                            );
+                          },
+                        );
                       } else {
-                        debugPrint('Sign in failed');
+                        debugPrint('Sign in failed: User is null');
                       }
                     } catch (e) {
                       debugPrint('$e');
@@ -63,7 +69,11 @@ class UserEntry extends StatelessWidget {
                 ),
                 Button(
                   onPressed: () {
-                    Navigator.pushNamed(context, RouteNames.auth, arguments: true);
+                    Navigator.pushNamed(
+                      context,
+                      RouteNames.auth,
+                      arguments: true,
+                    );
                   },
                   text: 'Continue with Email',
                   imagePath: 'assets/images/lets-icons_e-mail.png',
@@ -75,7 +85,11 @@ class UserEntry extends StatelessWidget {
                 Suggest(
                   login: true,
                   onTap: () {
-                    Navigator.pushNamed(context, RouteNames.auth, arguments: false);
+                    Navigator.pushNamed(
+                      context,
+                      RouteNames.auth,
+                      arguments: false,
+                    );
                   },
                 )
               ],

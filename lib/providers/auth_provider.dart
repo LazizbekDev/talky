@@ -61,34 +61,42 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> signInWithGoogle() async {
-    const List<String> scopes = <String>[
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ];
-    GoogleSignInAccount? googleUser =
-        await GoogleSignIn(scopes: scopes).signIn();
+ Future<void> signInWithGoogle() async {
+  const List<String> scopes = <String>[
+    'email',
+  ];
+  GoogleSignInAccount? googleUser = await GoogleSignIn(scopes: scopes).signIn();
 
-    if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      try {
-        final UserCredential userCredential =
-            await _auth.signInWithCredential(credential);
+  if (googleUser != null) {
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    try {
+      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      if (userCredential.user != null) {
         _user = userCredential.user;
+        await FirebaseFirestore.instance.collection('users').doc(_user!.uid).set({
+          'nick': _user?.displayName,
+          'email': _user?.email,
+          'image_url': _user?.photoURL,
+          'uid': _user?.uid,
+        }, SetOptions(merge: true));
         notifyListeners();
-      } catch (e) {
-        if (e is FirebaseAuthException) {
-          debugPrint('Error: ${e.message}');
-        }
-        throw Exception(e.toString());
+      } else {
+        debugPrint('User credential is null');
       }
+    } catch (e) {
+      debugPrint('Sign in error: $e');
+      throw Exception(e.toString());
     }
+  } else {
+    debugPrint('Google user sign-in was canceled.');
   }
+}
+
 
   Future<void> uploadUserInfoToFireStore(
       {selectedImage, nick, description}) async {
@@ -116,6 +124,7 @@ class AuthProvider extends ChangeNotifier {
         'image_url': imageUrl,
         'nick': nick,
         'description': description,
+        'uid': user?.uid,
       });
 
       debugPrint(imageUrl);
