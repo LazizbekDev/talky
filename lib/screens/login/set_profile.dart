@@ -9,7 +9,7 @@ import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/utilities/status.dart';
 import 'package:talky/widgets/button.dart';
 import 'package:talky/widgets/input.dart';
-import 'package:talky/widgets/user_image_picker.dart';
+import 'package:talky/widgets/login/user_image_picker.dart';
 
 class SetProfile extends StatefulWidget {
   const SetProfile({super.key});

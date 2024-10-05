@@ -9,11 +9,11 @@ import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/layouts/login_layout.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/utilities/status.dart';
-import 'package:talky/widgets/agreement.dart';
+import 'package:talky/widgets/login/agreement.dart';
 import 'package:talky/widgets/button.dart';
 import 'package:talky/widgets/forgot_password.dart';
 import 'package:talky/widgets/input.dart';
-import 'package:talky/widgets/suggest.dart';
+import 'package:talky/widgets/login/suggest.dart';
 
 // ignore: must_be_immutable
 class SignIn extends StatefulWidget {

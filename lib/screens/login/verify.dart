@@ -5,11 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:otp_pin_field/otp_pin_field.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/providers/auth_provider.dart';
-import 'package:talky/screens/sign_in.dart';
+import 'package:talky/screens/login/sign_in.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/button.dart';
 import 'package:talky/widgets/logo.dart';
-import 'package:talky/widgets/suggest.dart';
+import 'package:talky/widgets/login/suggest.dart';
 
 class Verify extends StatelessWidget {
   final String? email;

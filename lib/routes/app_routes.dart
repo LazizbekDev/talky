@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:talky/routes/route_names.dart';
-import 'package:talky/screens/chat.dart';
-import 'package:talky/screens/set_profile.dart';
-import 'package:talky/screens/sign_in.dart';
+import 'package:talky/screens/chat/chat.dart';
+import 'package:talky/screens/login/set_profile.dart';
+import 'package:talky/screens/login/sign_in.dart';
 import 'package:talky/screens/splash.dart';
 import 'package:talky/screens/user_entry.dart';
-import 'package:talky/screens/verify.dart';
+import 'package:talky/screens/login/verify.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {

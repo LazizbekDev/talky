@@ -8,7 +8,7 @@ import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/button.dart';
 import 'package:talky/widgets/divider.dart';
 import 'package:talky/widgets/logo.dart';
-import 'package:talky/widgets/suggest.dart';
+import 'package:talky/widgets/login/suggest.dart';
 
 class UserEntry extends StatelessWidget {
   const UserEntry({super.key});
