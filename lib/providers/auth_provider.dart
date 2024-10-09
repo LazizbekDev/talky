@@ -33,7 +33,7 @@ class AuthProvider extends ChangeNotifier {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       notifyListeners();
     } catch (e) {
-      throw Exception(e.toString());
+      handleError(e);
     }
   }
 
@@ -44,65 +44,57 @@ class AuthProvider extends ChangeNotifier {
   }) async {
     try {
       bool isVerified = EmailOTP.verifyOTP(otp: otp);
-
       if (!isVerified) {
         throw Exception('Invalid OTP. Please try again.');
       }
-
       await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
+          email: email, password: password);
       notifyListeners();
     } catch (e) {
-      debugPrint('$e');
-      throw Exception(e.toString());
+      handleError(e);
     }
   }
 
- Future<void> signInWithGoogle() async {
-  const List<String> scopes = <String>[
-    'email',
-  ];
-  GoogleSignInAccount? googleUser = await GoogleSignIn(scopes: scopes).signIn();
-
-  if (googleUser != null) {
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
+  Future<void> signInWithGoogle() async {
     try {
-      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final googleUser = await GoogleSignIn(scopes: ['email']).signIn();
+      if (googleUser == null) return;
+
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential = await _auth.signInWithCredential(credential);
       if (userCredential.user != null) {
         _user = userCredential.user;
-        await FirebaseFirestore.instance.collection('users').doc(_user!.uid).set({
-          'nick': _user?.displayName,
-          'email': _user?.email,
-          'image_url': _user?.photoURL,
-          'uid': _user?.uid,
-        }, SetOptions(merge: true));
+        await _saveUserDataToFirestore();
         notifyListeners();
-      } else {
-        debugPrint('User credential is null');
       }
     } catch (e) {
-      debugPrint('Sign in error: $e');
-      throw Exception(e.toString());
+      handleError(e);
     }
-  } else {
-    debugPrint('Google user sign-in was canceled.');
   }
-}
 
+  Future<void> _saveUserDataToFirestore() async {
+    if (_user != null) {
+      await FirebaseFirestore.instance.collection('users').doc(_user!.uid).set({
+        'nick': _user?.displayName,
+        'email': _user?.email,
+        'image_url': _user?.photoURL,
+        'uid': _user?.uid,
+      }, SetOptions(merge: true));
+    }
+  }
 
-  Future<void> uploadUserInfoToFireStore(
-      {selectedImage, nick, description}) async {
+  Future<void> uploadUserInfoToFirestore({
+    required String nick,
+    required dynamic selectedImage,
+    String description = ''
+  }) async {
     try {
       setIsUploading(true);
-
       if (nick.isEmpty) {
         throw Exception('Please enter your nickname.');
       }
@@ -110,29 +102,24 @@ class AuthProvider extends ChangeNotifier {
       final storageRef = FirebaseStorage.instance
           .ref()
           .child('user_images')
-          .child('${user!.uid}.jpg');
+          .child('${_user!.uid}.jpg');
 
-      SettableMetadata metadata = SettableMetadata(
-        contentType: 'image/jpeg',
-      );
-
-      await storageRef.putFile(selectedImage, metadata);
+      await storageRef.putFile(selectedImage);
       final imageUrl = await storageRef.getDownloadURL();
 
-      await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
-        'email': user?.email,
+      await FirebaseFirestore.instance.collection('users').doc(_user!.uid).set({
+        'email': _user?.email,
         'image_url': imageUrl,
         'nick': nick,
         'description': description,
         'uid': user?.uid,
       });
 
-      debugPrint(imageUrl);
+      _profileImageUrl = imageUrl;
       setIsUploading(false);
       notifyListeners();
     } catch (err) {
-      debugPrint('err: $err');
-      throw Exception(err);
+      handleError(err);
     }
   }
 
@@ -142,7 +129,7 @@ class AuthProvider extends ChangeNotifier {
       _user = null;
       notifyListeners();
     } catch (e) {
-      throw Exception(e.toString());
+      handleError(e);
     }
   }
 
@@ -150,7 +137,12 @@ class AuthProvider extends ChangeNotifier {
     try {
       await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
-      throw Exception(e.toString());
+      handleError(e);
     }
+  }
+
+  void handleError(dynamic e) {
+    debugPrint('Error: $e');
+    throw Exception(e.toString());
   }
 }

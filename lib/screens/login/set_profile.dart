@@ -38,7 +38,7 @@ class _SetProfileState extends State<SetProfile> {
       } else {
         debugPrint('Image selected: ${selectedImage!.path}');
         File imageFile = File(selectedImage!.path);
-        await userProvider.uploadUserInfoToFireStore(
+        await userProvider.uploadUserInfoToFirestore(
           selectedImage: imageFile,
           nick: nickNameController.text,
           description: bioController.text,

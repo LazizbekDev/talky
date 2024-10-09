@@ -36,19 +36,16 @@ class UserEntry extends StatelessWidget {
                       await authProvider.signInWithGoogle();
 
                       if (authProvider.user != null) {
-                        WidgetsBinding.instance.addPostFrameCallback(
-                          (_) {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              RouteNames.chat,
-                            );
-                          },
+                        Navigator.pushReplacementNamed(
+                          context,
+                          RouteNames.chat,
                         );
                       } else {
                         debugPrint('Sign in failed: User is null');
                       }
                     } catch (e) {
-                      debugPrint('$e');
+                      debugPrint('Error during sign-in: $e');
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Sign-in failed. Please try again.'),

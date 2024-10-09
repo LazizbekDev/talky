@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:talky/providers/auth_provider.dart' as sign_out;
 import 'package:provider/provider.dart';
-import 'package:talky/routes/route_names.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/chat/user_list.dart';
 
@@ -104,13 +103,7 @@ class Chat extends StatelessWidget {
                               ),
                             ),
                             IconButton(
-                              onPressed: () {
-                                Provider.of<sign_out.AuthProvider>(context,
-                                        listen: false)
-                                    .signOut();
-                                Navigator.pushReplacementNamed(
-                                    context, RouteNames.splash);
-                              },
+                              onPressed: () {},
                               icon: Image.asset(
                                 'assets/images/search.png',
                                 width: 20,
@@ -154,7 +147,6 @@ class Chat extends StatelessWidget {
           onPressed: () {
             Provider.of<sign_out.AuthProvider>(context, listen: false)
                 .signOut();
-            // Navigator.pushNamed(context, RouteNames.splash);
           },
           shape: const CircleBorder(),
           child: Image.asset(

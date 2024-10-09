@@ -1,6 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
-// import 'package:email_otp/email_otp.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,11 +18,10 @@ class SignIn extends StatefulWidget {
   bool signIn;
 
   @override
-  SignInState createState() => SignInState();
+  State<SignIn> createState() => _SignInState();
 }
 
-class SignInState extends State<SignIn> {
-  // bool signIn = true;
+class _SignInState extends State<SignIn> {
   bool termAndConditions = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -35,6 +31,13 @@ class SignInState extends State<SignIn> {
     setState(() {
       _obscureText = !_obscureText;
     });
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
