@@ -40,9 +40,7 @@ class UserList extends StatelessWidget {
               width: 12,
               height: 12,
               decoration: BoxDecoration(
-                color: isOnline
-                    ? Colors.green
-                    : Colors.grey,
+                color: isOnline ? Colors.green : Colors.grey,
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: Colors.white,

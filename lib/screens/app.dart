@@ -2,6 +2,7 @@ import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/providers/auth_provider.dart';
+import 'package:talky/providers/chat_provider.dart';
 import 'package:talky/providers/users_provider.dart';
 import 'package:talky/routes/app_routes.dart';
 import 'package:talky/routes/route_names.dart';
@@ -22,10 +23,9 @@ class App extends StatelessWidget {
     );
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => AuthProvider(),
-        ),
-        ChangeNotifierProvider(create: (_) => UserProvider())
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider())
       ],
       child: MaterialApp(
         title: 'TALKY',
