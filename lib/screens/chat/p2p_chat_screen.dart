@@ -80,6 +80,10 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: ProfileBar(
+                profileImageUrl: widget.chatPartnerImage,
+                partnerName: widget.chatPartnerName,
+              ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -90,10 +94,6 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
           ),
           child: Column(
             children: [
-              ProfileBar(
-                profileImageUrl: widget.chatPartnerImage,
-                partnerName: widget.chatPartnerName,
-              ),
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: _firestore

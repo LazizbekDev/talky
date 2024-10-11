@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,14 +47,21 @@ class _SignInState extends State<SignIn> {
     final authProvider = Provider.of<AuthProvider>(context);
 
     void signIn() async {
+      final localContext = context;
+
       try {
         await authProvider.signIn(
           _emailController.text,
           _passwordController.text,
         );
-        Navigator.pushReplacementNamed(context, '/home');
+
+        if (!mounted) return;
+
+        Navigator.pushReplacementNamed(localContext, '/home');
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(localContext).showSnackBar(
           SnackBar(
             content: Text(
               e.toString(),

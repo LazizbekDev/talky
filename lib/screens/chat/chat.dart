@@ -1,72 +1,33 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:talky/providers/auth_provider.dart' as sign_out;
 import 'package:provider/provider.dart';
+import 'package:talky/providers/users_provider.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/chat/user_list.dart';
 
 class Chat extends StatelessWidget {
   const Chat({super.key});
 
-  Future<Map<String, dynamic>> fetchUserProfileAndAllUsers() async {
-    try {
-      final currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser == null) {
-        throw Exception("User not signed in");
-      }
-
-      final userProfileFuture = FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .get();
-
-      final allUsersFuture = FirebaseFirestore.instance
-          .collection('users')
-          .where('uid', isNotEqualTo: currentUser.uid)
-          .get();
-
-      final results = await Future.wait([userProfileFuture, allUsersFuture]);
-
-      final userProfile = results[0] as DocumentSnapshot;
-      final usersSnapshot = results[1] as QuerySnapshot;
-
-      return {
-        'userProfile': userProfile.data() as Map<String, dynamic>?,
-        'allUsers': usersSnapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
-            .toList(),
-      };
-    } catch (e) {
-      debugPrint('Failed to fetch data: $e');
-      throw Exception('Failed to fetch data');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(
-            top: 20,
-            left: 30,
-            right: 30,
-            bottom: 40,
-          ),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               FutureBuilder<Map<String, dynamic>>(
-                future: fetchUserProfileAndAllUsers(),
+                future: userProvider.fetchUserProfileAndAllUsers(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
 
                   if (snapshot.hasError) {
-                    return const Center(child: Text('Error loading data'));
+                    return Center(child: Text('Error: ${snapshot.error}'));
                   }
 
                   if (!snapshot.hasData || snapshot.data == null) {
@@ -74,8 +35,11 @@ class Chat extends StatelessWidget {
                   }
 
                   final userProfile = snapshot.data!['userProfile'];
-                  final allUsers =
-                      snapshot.data!['allUsers'] as List<Map<String, dynamic>>;
+                  final allUsers = snapshot.data!['allUsers'];
+
+                  if (userProfile == null || allUsers.isEmpty) {
+                    return const Center(child: Text('No users available'));
+                  }
 
                   final profileImageUrl = userProfile['image_url'];
 
@@ -95,8 +59,8 @@ class Chat extends StatelessWidget {
                                   : null,
                             ),
                             Text(
-                              'Chats',
-                              style: GoogleFonts.inter(
+                              userProfile['nick'] ?? 'User',
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                                 color: AppColors.textPrimary,
@@ -104,11 +68,7 @@ class Chat extends StatelessWidget {
                             ),
                             IconButton(
                               onPressed: () {},
-                              icon: Image.asset(
-                                'assets/images/search.png',
-                                width: 20,
-                                height: 20,
-                              ),
+                              icon: const Icon(Icons.search, size: 20),
                             ),
                           ],
                         ),
@@ -124,7 +84,7 @@ class Chat extends StatelessWidget {
                                 userName: user['nick'],
                                 chatPartnerId: user['uid'],
                                 lastMessage:
-                                    user['lastMessage'] ?? "How did u talk her",
+                                    user['lastMessage'] ?? "No message yet",
                                 lastSeenTime: "2",
                                 isOnline: false,
                               );
