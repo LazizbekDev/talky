@@ -15,7 +15,30 @@ class UserEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    void signIn(authProvider) async {
+      try {
+        await authProvider.signInWithGoogle();
+
+        if (authProvider.user != null && context.mounted) {
+          Navigator.pushReplacementNamed(
+            context,
+            RouteNames.chat,
+          );
+        } else {
+          debugPrint('Sign in failed: User is null');
+        }
+      } catch (e) {
+        debugPrint('Error during sign-in: $e');
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Sign-in failed. Please try again.'),
+            ),
+          );
+        }
+      }
+    }
 
     return Scaffold(
       backgroundColor: AppColors.middleGray,
@@ -30,32 +53,47 @@ class UserEntry extends StatelessWidget {
                   dark: true,
                 ),
                 const Spacer(),
-                Button(
-                  onPressed: () async {
-                    try {
-                      await authProvider.signInWithGoogle();
-
-                      if (authProvider.user != null) {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          RouteNames.chat,
-                        );
-                      } else {
-                        debugPrint('Sign in failed: User is null');
-                      }
-                    } catch (e) {
-                      debugPrint('Error during sign-in: $e');
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Sign-in failed. Please try again.'),
-                        ),
-                      );
-                    }
+                Consumer<AuthProvider>(
+                  builder: (context, authProvider, child) {
+                    return MaterialButton(
+                      onPressed: () => signIn(authProvider),
+                      color: AppColors.backgroundColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      minWidth: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 18.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (authProvider.loading) ...[
+                            const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.0,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ] else ...[
+                            Image.asset(
+                              'assets/images/iconGoogle.png',
+                              height: 24,
+                            ),
+                            const SizedBox(width: 25),
+                            const Text(
+                              'Sign in with Google',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
                   },
-                  text: 'Sign in with Google',
-                  imagePath: 'assets/images/iconGoogle.png',
-                  color: AppColors.backgroundColor,
                 ),
                 const SizedBox(
                   height: 38,

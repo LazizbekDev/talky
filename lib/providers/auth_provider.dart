@@ -8,16 +8,23 @@ import 'package:google_sign_in/google_sign_in.dart';
 class AuthProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
+  bool _loading = false;
   bool _isUploading = false;
   String? _profileImageUrl;
 
   User? get user => _user;
   bool get isAuthenticated => _user != null;
+  bool get loading => _loading;
   bool get isUploading => _isUploading;
   String? get profileImageUrl => _profileImageUrl;
 
   void setIsUploading(bool value) {
     _isUploading = value;
+    notifyListeners();
+  }
+
+  void setIsLoading(bool value) {
+    _loading = value;
     notifyListeners();
   }
 
@@ -56,6 +63,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> signInWithGoogle() async {
+    setIsLoading(true);
     try {
       final googleUser = await GoogleSignIn(scopes: ['email']).signIn();
       if (googleUser == null) return;
@@ -74,6 +82,9 @@ class AuthProvider extends ChangeNotifier {
       }
     } catch (e) {
       handleError(e);
+    } finally {
+      setIsLoading(false);
+      notifyListeners();
     }
   }
 
@@ -88,11 +99,10 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> uploadUserInfoToFirestore({
-    required String nick,
-    required dynamic selectedImage,
-    String description = ''
-  }) async {
+  Future<void> uploadUserInfoToFirestore(
+      {required String nick,
+      required dynamic selectedImage,
+      String description = ''}) async {
     try {
       setIsUploading(true);
       if (nick.isEmpty) {
