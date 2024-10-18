@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:talky/screens/chat/message_box.dart';
 import 'package:talky/widgets/chat/profile_bar.dart';
+import 'package:talky/widgets/chat/send_data.dart';
 
 class P2PChatScreen extends StatefulWidget {
   final String chatPartnerId;
@@ -81,9 +82,9 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ProfileBar(
-                profileImageUrl: widget.chatPartnerImage,
-                partnerName: widget.chatPartnerName,
-              ),
+        profileImageUrl: widget.chatPartnerImage,
+        partnerName: widget.chatPartnerName,
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -134,27 +135,9 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                   },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        decoration: InputDecoration(
-                          hintText: 'Type a message...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: () => _sendMessage(_messageController.text),
-                    ),
-                  ],
-                ),
+              SendData(
+                sendToChat: _sendMessage,
+                controller: _messageController,
               ),
             ],
           ),
