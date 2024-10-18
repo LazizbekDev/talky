@@ -4,19 +4,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:talky/utilities/app_colors.dart';
 
 class SendData extends StatefulWidget {
-  const SendData({super.key, required this.sendToChat, required this.controller});
+  const SendData(
+      {super.key, required this.sendToChat, required this.controller});
   final Function(String msg) sendToChat;
   final TextEditingController controller;
-
 
   @override
   State<SendData> createState() => _SendMessageState();
 }
 
 class _SendMessageState extends State<SendData> {
-
   void _sendMessage() {
     if (widget.controller.text.isNotEmpty) {
+      FocusScope.of(context).unfocus();
       final message = widget.controller.text.trim();
       widget.sendToChat(message);
     }
