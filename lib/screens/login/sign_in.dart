@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/layouts/login_layout.dart';
+import 'package:talky/routes/route_names.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/utilities/status.dart';
 import 'package:talky/widgets/login/agreement.dart';
@@ -57,7 +58,7 @@ class _SignInState extends State<SignIn> {
 
         if (!mounted) return;
 
-        Navigator.pushReplacementNamed(localContext, '/home');
+        Navigator.pushReplacementNamed(localContext, RouteNames.chat);
       } catch (e) {
         if (!mounted) return;
 

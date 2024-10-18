@@ -5,5 +5,26 @@
         "googleusercontent",
         "mobilesdk",
         "notlazy"
-    ]
+    ],
+    "apc.electron": {
+        "opacity": 0.95,
+        "transparent": true,
+        "backgroundColor": "#35353535",
+        "vibrancy": "ultra-dark"
+    },
+    "apc.stylesheet": {
+        ".monaco-editor .cursor": "background: #ffffffaa !important; box-shadow: 0 0 70px 5px #ffffff, #ffffff 0px 0px 34px 1px; color: [#161616](https://github.com/AlexOwl/vscode-transparent-color-theme/issues/161616) !important"
+    },
+    "editor.cursorBlinking": "phase",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.fontFamily": "'FiraCode Nerd Font Mono', 'FiraCode Nerd Font', FiraCode, Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontLigatures": true,
+    "animations.Enabled": true,
+    "animations.CursorAnimation": true,
+    "animations.Command-Palette": "None",
+    "animations.CursorAnimationOptions": {
+        "TrailLength": 10
+    },
+    "animations.Tabs": "Slide",
+    "animations.Active": "Indent"
 }
