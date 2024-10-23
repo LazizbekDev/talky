@@ -45,11 +45,13 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
 
     if (pickedFile != null) {
       File imageFile = File(pickedFile.path);
-      String? imageUrl = await Provider.of<ChatProvider>(context, listen: false)
-          .uploadImage(imageFile);
-      if (imageUrl != null) {
-        await Provider.of<ChatProvider>(context, listen: false)
-            .sendMessage(imageUrl: imageUrl);
+      if (!mounted) return;
+      final chatProvider = Provider.of<ChatProvider>(context, listen: false);
+
+      String? imageUrl = await chatProvider.uploadImage(imageFile);
+
+      if (imageUrl != null && mounted) {
+        await chatProvider.sendMessage(imageUrl: imageUrl);
       }
     } else {
       debugPrint('No image selected');
