@@ -3,24 +3,17 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:talky/utilities/app_colors.dart';
 
-class SendData extends StatefulWidget {
-  const SendData(
-      {super.key, required this.sendToChat, required this.controller});
-  final Function(String msg) sendToChat;
+class SendData extends StatelessWidget {
+  final Function({String? text, String? imageUrl}) sendToChat;
+  final VoidCallback chooseImage;
   final TextEditingController controller;
 
-  @override
-  State<SendData> createState() => _SendMessageState();
-}
-
-class _SendMessageState extends State<SendData> {
-  void _sendMessage() {
-    if (widget.controller.text.isNotEmpty) {
-      FocusScope.of(context).unfocus();
-      final message = widget.controller.text.trim();
-      widget.sendToChat(message);
-    }
-  }
+  const SendData({
+    super.key,
+    required this.sendToChat,
+    required this.chooseImage,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +26,7 @@ class _SendMessageState extends State<SendData> {
             child: SizedBox(
               height: 54,
               child: TextField(
-                controller: widget.controller,
+                controller: controller,
                 decoration: InputDecoration(
                   hintText: 'Message',
                   hintStyle: GoogleFonts.inter(
@@ -57,7 +50,13 @@ class _SendMessageState extends State<SendData> {
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.send_rounded),
                     color: AppColors.textPrimary,
-                    onPressed: () => _sendMessage(),
+                    onPressed: () {
+                      final text = controller.text.trim();
+                      if (text.isNotEmpty) {
+                        sendToChat(text: text);
+                        controller.clear();
+                      }
+                    },
                   ),
                 ),
               ),
@@ -81,7 +80,7 @@ class _SendMessageState extends State<SendData> {
                 child: const Icon(Icons.camera_alt, color: Colors.blue),
                 backgroundColor: Colors.white,
                 shape: const CircleBorder(),
-                onTap: () => debugPrint('Camera tapped'),
+                onTap: chooseImage,
               ),
               SpeedDialChild(
                 child: const Icon(Icons.mic, color: Colors.blue),

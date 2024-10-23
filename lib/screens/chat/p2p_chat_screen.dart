@@ -1,10 +1,14 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:talky/screens/chat/message_box.dart';
 import 'package:talky/widgets/chat/profile_bar.dart';
 import 'package:talky/widgets/chat/send_data.dart';
+import 'package:talky/providers/chat_provider.dart';
+import 'package:intl/intl.dart';
 
 class P2PChatScreen extends StatefulWidget {
   final String chatPartnerId;
@@ -23,64 +27,38 @@ class P2PChatScreen extends StatefulWidget {
 }
 
 class _P2PChatScreenState extends State<P2PChatScreen> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _messageController = TextEditingController();
-
-  String chatRoomId = '';
 
   @override
   void initState() {
     super.initState();
-    _initializeChatRoom();
+    Provider.of<ChatProvider>(context, listen: false)
+        .initializeChatRoom(widget.chatPartnerId);
   }
 
-  Future<void> _initializeChatRoom() async {
-    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
-    final partnerId = widget.chatPartnerId;
+  Future<void> pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70,
+      maxWidth: 150,
+    );
 
-    if (currentUserId.compareTo(partnerId) > 0) {
-      chatRoomId = '${partnerId}_$currentUserId';
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      String? imageUrl = await Provider.of<ChatProvider>(context, listen: false)
+          .uploadImage(imageFile);
+      if (imageUrl != null) {
+        await Provider.of<ChatProvider>(context, listen: false)
+            .sendMessage(imageUrl: imageUrl);
+      }
     } else {
-      chatRoomId = '${currentUserId}_$partnerId';
+      debugPrint('No image selected');
     }
-
-    final chatRoomRef = _firestore.collection('chatRooms').doc(chatRoomId);
-    final chatRoomSnapshot = await chatRoomRef.get();
-
-    if (!chatRoomSnapshot.exists) {
-      chatRoomRef.set({
-        'users': [currentUserId, partnerId],
-        'lastMessage': '',
-        'lastUpdated': FieldValue.serverTimestamp(),
-      });
-    }
-
-    setState(() {});
-  }
-
-  Future<void> _sendMessage(String message) async {
-    if (message.isEmpty) return;
-
-    final currentUser = FirebaseAuth.instance.currentUser;
-    final chatRoomRef = _firestore.collection('chatRooms').doc(chatRoomId);
-    final messagesRef = chatRoomRef.collection('messages');
-
-    await messagesRef.add({
-      'senderId': currentUser!.uid,
-      'message': message,
-      'timestamp': FieldValue.serverTimestamp(),
-    });
-
-    await chatRoomRef.update({
-      'lastMessage': message,
-      'lastUpdated': FieldValue.serverTimestamp(),
-    });
-
-    _messageController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
+    final chatProvider = Provider.of<ChatProvider>(context);
     return Scaffold(
       appBar: ProfileBar(
         profileImageUrl: widget.chatPartnerImage,
@@ -97,10 +75,10 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
           child: Column(
             children: [
               Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: _firestore
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
                       .collection('chatRooms')
-                      .doc(chatRoomId)
+                      .doc(chatProvider.chatRoomId)
                       .collection('messages')
                       .orderBy('timestamp', descending: true)
                       .snapshots(),
@@ -116,16 +94,22 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                       reverse: true,
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
-                        final message =
-                            messages[index].data() as Map<String, dynamic>;
+                        final message = messages[index].data();
                         final isMe = message['senderId'] ==
                             FirebaseAuth.instance.currentUser!.uid;
-                        final Timestamp timestamp = message['timestamp'];
-                        final DateTime messageDate = timestamp.toDate();
+                        final Timestamp? timestamp =
+                            message['timestamp'] as Timestamp?;
+
+                        DateTime messageDate = timestamp != null
+                            ? timestamp.toDate()
+                            : DateTime.now();
+
                         final String formattedDate =
                             DateFormat('MMM dd, yyyy').format(messageDate);
 
                         bool showDateHeader = false;
+                        debugPrint(
+                            "Image url in screen: ${message['imageUrl']}");
 
                         if (previousDate == null ||
                             previousDate != formattedDate) {
@@ -156,8 +140,9 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: MessageBox(
                                   sender: isMe,
-                                  message: message['message'],
-                                  timestamp: message['timestamp'],
+                                  message: message['message'] ?? '',
+                                  timestamp: messageDate,
+                                  imageUrl: message['imageUrl'],
                                 ),
                               ),
                             ),
@@ -169,7 +154,11 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                 ),
               ),
               SendData(
-                sendToChat: _sendMessage,
+                sendToChat: ({String? text, String? imageUrl}) {
+                  Provider.of<ChatProvider>(context, listen: false)
+                      .sendMessage(text: text, imageUrl: imageUrl);
+                },
+                chooseImage: pickImage,
                 controller: _messageController,
               ),
             ],

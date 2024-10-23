@@ -1,53 +1,49 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:talky/utilities/app_colors.dart';
 
 class MessageBox extends StatelessWidget {
   final bool sender;
   final String message;
-  final Timestamp timestamp;
+  final DateTime timestamp;
+  final String? imageUrl; // Add this line
 
   const MessageBox({
     super.key,
     required this.sender,
     required this.message,
     required this.timestamp,
+    this.imageUrl, // Accept the imageUrl
   });
 
   @override
   Widget build(BuildContext context) {
-    DateTime date = timestamp.toDate();
-    String formattedTime = DateFormat('HH:mm').format(date);
-
     return Column(
-      crossAxisAlignment:
-          sender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: sender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            color: sender ? AppColors.primaryColor : AppColors.middleGray,
-            borderRadius: BorderRadius.circular(8),
+        if (imageUrl != null && imageUrl!.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Image.network(imageUrl!),
           ),
-          padding: const EdgeInsets.all(12),
-          child: Text(
-            message,
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w500,
-              fontSize: 16,
-              color: sender ? AppColors.backgroundColor : AppColors.textPrimary,
+        if (message.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: sender ? Colors.blueAccent : Colors.grey[300],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              message,
+              style: TextStyle(
+                color: sender ? Colors.white : Colors.black,
+              ),
             ),
           ),
-        ),
         Padding(
-          padding: const EdgeInsets.only(top: 5),
+          padding: const EdgeInsets.only(top: 5.0),
           child: Text(
-            formattedTime, // Display the formatted time here
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
+            DateFormat('hh:mm a').format(timestamp),
+            style: const TextStyle(fontSize: 10, color: Colors.grey),
           ),
         ),
       ],
