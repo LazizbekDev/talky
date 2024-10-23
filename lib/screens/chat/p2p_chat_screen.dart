@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:talky/screens/chat/message_box.dart';
+import 'package:talky/widgets/chat/message_box.dart';
 import 'package:talky/widgets/chat/profile_bar.dart';
 import 'package:talky/widgets/chat/send_data.dart';
 import 'package:talky/providers/chat_provider.dart';

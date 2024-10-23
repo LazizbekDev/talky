@@ -1,0 +1,86 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
+
+class MessageBox extends StatelessWidget {
+  final bool sender;
+  final String message;
+  final DateTime timestamp;
+  final String? imageUrl;
+
+  const MessageBox({
+    super.key,
+    required this.sender,
+    required this.message,
+    required this.timestamp,
+    this.imageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment:
+          sender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        if (imageUrl != null && imageUrl!.isNotEmpty)
+          GestureDetector(
+            onTap: () => _showImage(context, imageUrl!),
+            child: Container(
+              width: 125,
+              height: 125,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                image: DecorationImage(
+                  image: NetworkImage(imageUrl!),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        if (message.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: sender ? Colors.blueAccent : Colors.grey[300],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              message,
+              style: TextStyle(
+                color: sender ? Colors.white : Colors.black,
+              ),
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.only(top: 5.0),
+          child: Text(
+            DateFormat('hh:mm a').format(timestamp),
+            style: const TextStyle(fontSize: 10, color: Colors.grey),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showImage(BuildContext context, String imageUrl) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          backgroundColor: Colors.black,
+          body: PhotoViewGallery(
+            pageOptions: [
+              PhotoViewGalleryPageOptions(
+                imageProvider: NetworkImage(imageUrl),
+                minScale: PhotoViewComputedScale.contained,
+                maxScale: PhotoViewComputedScale.covered * 2,
+              ),
+            ],
+            backgroundDecoration: const BoxDecoration(color: Colors.black),
+          ),
+        ),
+      ),
+    );
+  }
+}
