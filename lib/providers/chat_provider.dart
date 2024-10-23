@@ -49,12 +49,8 @@ class ChatProvider with ChangeNotifier {
           .child('chat_image_$fileName.png');
 
       Uint8List imageBytes = await imageFile.readAsBytes();
-
       var uploadTask = await refStorage.putData(imageBytes);
-
       String imageUrl = await uploadTask.ref.getDownloadURL();
-
-      debugPrint("Image uploaded successfully, URL: $imageUrl");
       return imageUrl;
     } catch (e) {
       debugPrint('Failed to upload image: $e');

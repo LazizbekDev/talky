@@ -37,11 +37,8 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
   }
 
   Future<void> pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 70,
-      maxWidth: 150,
-    );
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       File imageFile = File(pickedFile.path);
@@ -97,6 +94,12 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
                         final message = messages[index].data();
+                        final String imageUrl = message['imageUrl'] ?? '';
+
+                        List<String> imageUrls = [];
+                        if (imageUrl.isNotEmpty) {
+                          imageUrls.add(imageUrl);
+                        }
                         final isMe = message['senderId'] ==
                             FirebaseAuth.instance.currentUser!.uid;
                         final Timestamp? timestamp =
@@ -144,7 +147,7 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                                   sender: isMe,
                                   message: message['message'] ?? '',
                                   timestamp: messageDate,
-                                  imageUrl: message['imageUrl'],
+                                  imageUrls: imageUrls,
                                 ),
                               ),
                             ),

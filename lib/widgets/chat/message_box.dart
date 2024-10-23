@@ -7,14 +7,14 @@ class MessageBox extends StatelessWidget {
   final bool sender;
   final String message;
   final DateTime timestamp;
-  final String? imageUrl;
+  final List<String>? imageUrls;
 
   const MessageBox({
     super.key,
     required this.sender,
     required this.message,
     required this.timestamp,
-    this.imageUrl,
+    this.imageUrls,
   });
 
   @override
@@ -23,16 +23,17 @@ class MessageBox extends StatelessWidget {
       crossAxisAlignment:
           sender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        if (imageUrl != null && imageUrl!.isNotEmpty)
+        if (imageUrls != null && imageUrls!.isNotEmpty)
           GestureDetector(
-            onTap: () => _showImage(context, imageUrl!),
+            onTap: () => _showImage(context, imageUrls!,
+                title: DateFormat('hh:mm a').format(timestamp)),
             child: Container(
               width: 125,
               height: 125,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 image: DecorationImage(
-                  image: NetworkImage(imageUrl!),
+                  image: NetworkImage(imageUrls![0]),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -63,20 +64,35 @@ class MessageBox extends StatelessWidget {
     );
   }
 
-  void _showImage(BuildContext context, String imageUrl) {
+  void _showImage(BuildContext context, List<String> imageUrls, {title}) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => Scaffold(
           backgroundColor: Colors.black,
-          body: PhotoViewGallery(
-            pageOptions: [
-              PhotoViewGalleryPageOptions(
-                imageProvider: NetworkImage(imageUrl),
+          appBar: AppBar(
+            backgroundColor: Colors.black54,
+            title: Text(
+              title,
+              style: const TextStyle(color: Colors.white),
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.close, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          body: PhotoViewGallery.builder(
+            itemCount: imageUrls.length,
+            builder: (context, index) {
+              return PhotoViewGalleryPageOptions(
+                imageProvider: NetworkImage(imageUrls[index]),
                 minScale: PhotoViewComputedScale.contained,
                 maxScale: PhotoViewComputedScale.covered * 2,
-              ),
-            ],
+              );
+            },
+            scrollPhysics: const BouncingScrollPhysics(),
             backgroundDecoration: const BoxDecoration(color: Colors.black),
           ),
         ),
