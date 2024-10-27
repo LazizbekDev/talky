@@ -39,6 +39,35 @@ class ChatProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Stream<String?> getLastMessage(String chatPartnerId) {
+    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
+    final chatRoomId = currentUserId.compareTo(chatPartnerId) > 0
+        ? '${chatPartnerId}_$currentUserId'
+        : '${currentUserId}_$chatPartnerId';
+
+    return _firestore
+        .collection('chatRooms')
+        .doc(chatRoomId)
+        .snapshots()
+        .map((snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        return snapshot.data()!['lastMessage'] as String?;
+      }
+      return null;
+    });
+  }
+
+  Stream<Map<String, dynamic>> userStatusStream(String userId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.data() ?? {};
+    });
+  }
+
   Future<String?> uploadImage(File imageFile) async {
     try {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();

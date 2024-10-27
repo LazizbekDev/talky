@@ -15,8 +15,7 @@ class SetProfile extends StatefulWidget {
   const SetProfile({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _SetProfileState createState() => _SetProfileState();
+  State<SetProfile> createState() => _SetProfileState();
 }
 
 class _SetProfileState extends State<SetProfile> {
@@ -28,7 +27,7 @@ class _SetProfileState extends State<SetProfile> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<AuthProvider>(context, listen: true);
 
-    void complete() async {
+    void complete(context) async {
       if (selectedImage == null) {
         debugPrint('No image selected');
       } else if (nickNameController.text.isEmpty) {
@@ -44,7 +43,6 @@ class _SetProfileState extends State<SetProfile> {
           description: bioController.text,
         );
 
-        // ignore: use_build_context_synchronously
         Navigator.pushNamed(context, RouteNames.chat);
       }
     }
@@ -133,7 +131,7 @@ class _SetProfileState extends State<SetProfile> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Button(
-                          onPressed: complete,
+                          onPressed: () => complete(context),
                           text: "Complete",
                           status: userProvider.isUploading
                               ? Status.loading

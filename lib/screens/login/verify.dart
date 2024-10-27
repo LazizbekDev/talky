@@ -1,10 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:otp_pin_field/otp_pin_field.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/providers/auth_provider.dart';
+import 'package:talky/routes/route_names.dart';
 import 'package:talky/screens/login/sign_in.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/button.dart';
@@ -28,14 +27,14 @@ class Verify extends StatelessWidget {
       );
     }
 
-    void signUp(pin) async {
+    void signUp(pin, context) async {
       try {
         await authProvider.signUp(
           email: email ?? "",
           password: password ?? "",
           otp: pin,
         );
-        Navigator.pushReplacementNamed(context, '/profile');
+        Navigator.pushReplacementNamed(context, RouteNames.profile);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -108,7 +107,7 @@ class Verify extends StatelessWidget {
                 otpPinFieldDecoration:
                     OtpPinFieldDecoration.defaultPinBoxDecoration,
                 onSubmit: (String pin) {
-                  signUp(pin);
+                  signUp(pin, context);
                 },
                 onChange: (String text) {},
               ),

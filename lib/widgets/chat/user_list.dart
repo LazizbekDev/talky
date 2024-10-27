@@ -17,7 +17,7 @@ class UserList extends StatelessWidget {
   final dynamic profileImageUrl;
   final String userName;
   final String chatPartnerId;
-  final String lastMessage;
+  final String? lastMessage;
   final String lastSeenTime;
   final bool isOnline;
 
@@ -63,7 +63,7 @@ class UserList extends StatelessWidget {
             ),
           ),
           Text(
-            isOnline ? "Online" : "$lastSeenTime min ago",
+            lastSeenTime,
             style: GoogleFonts.inter(
               color: const Color(0xFF58616A),
               fontSize: 12,
@@ -75,7 +75,7 @@ class UserList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            lastMessage,
+            lastMessage ?? "No messages yet",
             style: GoogleFonts.inter(
               color: const Color(0xFF58616A),
               fontSize: 14,

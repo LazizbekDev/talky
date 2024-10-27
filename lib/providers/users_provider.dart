@@ -3,9 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserProvider with ChangeNotifier {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   Future<Map<String, dynamic>> fetchUserProfileAndAllUsers() async {
     try {
-      final currentUser = FirebaseAuth.instance.currentUser;
+      final currentUser = _auth.currentUser;
 
       if (currentUser == null) {
         debugPrint('User not signed in');
@@ -13,13 +16,11 @@ class UserProvider with ChangeNotifier {
       }
 
       debugPrint('Fetching user profile for: ${currentUser.uid}');
-      
-      final userProfileFuture = FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .get();
 
-      final allUsersFuture = FirebaseFirestore.instance
+      final userProfileFuture =
+          _firestore.collection('users').doc(currentUser.uid).get();
+
+      final allUsersFuture = _firestore
           .collection('users')
           .where('uid', isNotEqualTo: currentUser.uid)
           .get();
@@ -42,5 +43,25 @@ class UserProvider with ChangeNotifier {
       debugPrint('Error while fetching user data: $e');
       throw Exception('Failed to fetch data');
     }
+  }
+
+  Future<void> updateLastSeenStatus(bool isOnline) async {
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) return;
+
+    await _firestore.collection('users').doc(userId).update({
+      'lastSeen': FieldValue.serverTimestamp(),
+      'isOnline': isOnline,
+    });
+  }
+
+  Future<DateTime?> fetchUserLastSeen(String userId) async {
+    final userDoc = await _firestore.collection('users').doc(userId).get();
+    if (userDoc.exists) {
+      final isOnline = userDoc.data()?['isOnline'] as bool? ?? false;
+      if (isOnline) return null;
+      return (userDoc.data()?['lastSeen'] as Timestamp?)?.toDate();
+    }
+    return null;
   }
 }

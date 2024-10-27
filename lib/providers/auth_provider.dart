@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -99,10 +100,11 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> uploadUserInfoToFirestore(
-      {required String nick,
-      required dynamic selectedImage,
-      String description = ''}) async {
+  Future<void> uploadUserInfoToFirestore({
+    required String nick,
+    required dynamic selectedImage,
+    String description = '',
+  }) async {
     try {
       setIsUploading(true);
       if (nick.isEmpty) {
@@ -113,9 +115,9 @@ class AuthProvider extends ChangeNotifier {
           .ref()
           .child('user_images')
           .child('${_user!.uid}.jpg');
-
-      await storageRef.putFile(selectedImage);
-      final imageUrl = await storageRef.getDownloadURL();
+      Uint8List imageBytes = await selectedImage.readAsBytes();
+      final uploadTask = await storageRef.putData(imageBytes);
+      final imageUrl = await uploadTask.ref.getDownloadURL();
 
       await FirebaseFirestore.instance.collection('users').doc(_user!.uid).set({
         'email': _user?.email,
