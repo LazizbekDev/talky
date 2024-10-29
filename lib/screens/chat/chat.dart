@@ -4,6 +4,7 @@ import 'package:talky/providers/auth_provider.dart' as sign_out;
 import 'package:provider/provider.dart';
 import 'package:talky/providers/chat_provider.dart';
 import 'package:talky/providers/users_provider.dart';
+import 'package:talky/routes/route_names.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/utilities/lifecycle_observer.dart';
 import 'package:talky/widgets/chat/user_list.dart';
@@ -14,9 +15,7 @@ class Chat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    WidgetsBinding.instance.addObserver(LifecycleObserver(
-      Provider.of<UserProvider>(context, listen: false),
-    ));
+    WidgetsBinding.instance.addObserver(LifecycleObserver(userProvider));
     userProvider.updateLastSeenStatus(true);
     return Scaffold(
       body: SafeArea(
@@ -41,8 +40,12 @@ class Chat extends StatelessWidget {
                 final userProfile = snapshot.data!['userProfile'];
                 final allUsers = snapshot.data!['allUsers'];
 
-                if (userProfile == null || allUsers.isEmpty) {
+                if (allUsers.isEmpty) {
                   return const Center(child: Text('No users available'));
+                }
+
+                if (userProfile['email'] == null) {
+                  Navigator.pushReplacementNamed(context, RouteNames.profile);
                 }
 
                 final profileImageUrl = userProfile['image_url'];

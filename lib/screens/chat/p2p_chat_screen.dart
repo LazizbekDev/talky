@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -40,9 +42,8 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
+    if (pickedFile != null && mounted) {
       File imageFile = File(pickedFile.path);
-      if (!mounted) return;
       final chatProvider = Provider.of<ChatProvider>(context, listen: false);
 
       String? imageUrl = await chatProvider.uploadImage(imageFile);
@@ -52,6 +53,29 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
       }
     } else {
       debugPrint('No image selected');
+    }
+  }
+
+  Future<void> pickFile() async {
+    final result = await FilePicker.platform.pickFiles(withData: true);
+
+    if (result != null && mounted) {
+      Uint8List? fileBytes = result.files.single.bytes;
+      String fileName = result.files.single.name;
+
+      if (fileBytes == null) {
+        File file = File(result.files.single.path!);
+        fileBytes = await file.readAsBytes();
+      }
+      if (!mounted) return;
+      final chatProvider = Provider.of<ChatProvider>(context, listen: false);
+      String? fileUrl = await chatProvider.uploadFile(fileBytes, fileName);
+
+      if (fileUrl != null && mounted) {
+        await chatProvider.sendMessage(fileUrl: fileUrl);
+      }
+    } else {
+      debugPrint('No file selected');
     }
   }
 
@@ -95,6 +119,7 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                       itemBuilder: (context, index) {
                         final message = messages[index].data();
                         final String imageUrl = message['imageUrl'] ?? '';
+                        final String fileUrl = message['fileUrl'] ?? '';
 
                         List<String> imageUrls = [];
                         if (imageUrl.isNotEmpty) {
@@ -113,8 +138,6 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                             DateFormat('MMM dd, yyyy').format(messageDate);
 
                         bool showDateHeader = false;
-                        debugPrint(
-                            "Image url in screen: ${message['imageUrl']}");
 
                         if (previousDate == null ||
                             previousDate != formattedDate) {
@@ -148,6 +171,7 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                                   message: message['message'] ?? '',
                                   timestamp: messageDate,
                                   imageUrls: imageUrls,
+                                  fileUrl: fileUrl
                                 ),
                               ),
                             ),
@@ -164,6 +188,7 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                       .sendMessage(text: text, imageUrl: imageUrl);
                 },
                 chooseImage: pickImage,
+                chooseFile: pickFile,
                 controller: _messageController,
               ),
             ],

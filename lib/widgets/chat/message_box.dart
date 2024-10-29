@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MessageBox extends StatelessWidget {
   final bool sender;
   final String message;
   final DateTime timestamp;
   final List<String>? imageUrls;
+  final String fileUrl;
 
   const MessageBox({
     super.key,
@@ -15,6 +17,7 @@ class MessageBox extends StatelessWidget {
     required this.message,
     required this.timestamp,
     this.imageUrls,
+    required this.fileUrl,
   });
 
   @override
@@ -23,6 +26,7 @@ class MessageBox extends StatelessWidget {
       crossAxisAlignment:
           sender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
+        // Display image if available
         if (imageUrls != null && imageUrls!.isNotEmpty)
           GestureDetector(
             onTap: () => _showImage(context, imageUrls!,
@@ -39,6 +43,8 @@ class MessageBox extends StatelessWidget {
               ),
             ),
           ),
+
+        // Display message text if available
         if (message.isNotEmpty)
           Container(
             padding: const EdgeInsets.all(10),
@@ -53,6 +59,34 @@ class MessageBox extends StatelessWidget {
               ),
             ),
           ),
+
+        // Display file icon if fileUrl is available
+        if (fileUrl.isNotEmpty)
+          GestureDetector(
+            onTap: () => _openFile(fileUrl), // Opens the file on tap
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: sender ? Colors.blueAccent : Colors.grey[300],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.attach_file, color: Colors.white),
+                  const SizedBox(width: 8),
+                  Text(
+                    Uri.parse(fileUrl).pathSegments.last.split('chatFiles/')[1],
+                    style: TextStyle(
+                      color: sender ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+        // Display timestamp
         Padding(
           padding: const EdgeInsets.only(top: 5.0),
           child: Text(
@@ -98,5 +132,13 @@ class MessageBox extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _openFile(String url) async {
+    final Uri fileUri = Uri.parse(url);
+
+    if (await launchUrl(fileUri)) {
+      debugPrint("Could not open the file.");
+    }
   }
 }

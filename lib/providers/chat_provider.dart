@@ -87,8 +87,23 @@ class ChatProvider with ChangeNotifier {
     }
   }
 
-  Future<void> sendMessage({String? text, String? imageUrl}) async {
-    if (text == null && imageUrl == null) return;
+  Future<String?> uploadFile(Uint8List fileBytes, String fileName) async {
+    try {
+      var refStorage =
+          FirebaseStorage.instance.ref().child('chatFiles').child(fileName);
+
+      var uploadTask = await refStorage.putData(fileBytes);
+      String fileUrl = await uploadTask.ref.getDownloadURL();
+      return fileUrl;
+    } catch (e) {
+      debugPrint('Failed to upload file: $e');
+      return null;
+    }
+  }
+
+  Future<void> sendMessage(
+      {String? text, String? imageUrl, String? fileUrl}) async {
+    if (text == null && imageUrl == null && fileUrl == null) return;
 
     final currentUser = FirebaseAuth.instance.currentUser;
 
@@ -100,11 +115,12 @@ class ChatProvider with ChangeNotifier {
       'senderId': currentUser!.uid,
       'message': text ?? '',
       'imageUrl': imageUrl ?? '',
+      'fileUrl': fileUrl ?? '',
       'timestamp': FieldValue.serverTimestamp(),
     });
 
     await _firestore.collection('chatRooms').doc(chatRoomId).update({
-      'lastMessage': text ?? 'Image',
+      'lastMessage': text ?? (fileUrl != null ? 'File' : 'Image'),
       'lastUpdated': FieldValue.serverTimestamp(),
     });
 

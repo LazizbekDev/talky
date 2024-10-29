@@ -6,12 +6,14 @@ import 'package:talky/utilities/app_colors.dart';
 class SendData extends StatelessWidget {
   final Function({String? text, String? imageUrl}) sendToChat;
   final VoidCallback chooseImage;
+  final VoidCallback chooseFile;
   final TextEditingController controller;
 
   const SendData({
     super.key,
     required this.sendToChat,
     required this.chooseImage,
+    required this.chooseFile,
     required this.controller,
   });
 
@@ -74,7 +76,7 @@ class SendData extends StatelessWidget {
                 child: const Icon(Icons.attach_file, color: Colors.blue),
                 backgroundColor: Colors.white,
                 shape: const CircleBorder(),
-                onTap: () => debugPrint('Attach file tapped'),
+                onTap: chooseFile,
               ),
               SpeedDialChild(
                 child: const Icon(Icons.camera_alt, color: Colors.blue),

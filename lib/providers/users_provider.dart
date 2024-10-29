@@ -49,10 +49,40 @@ class UserProvider with ChangeNotifier {
     final userId = _auth.currentUser?.uid;
     if (userId == null) return;
 
-    await _firestore.collection('users').doc(userId).update({
-      'lastSeen': FieldValue.serverTimestamp(),
-      'isOnline': isOnline,
-    });
+    final userDoc = _firestore.collection('users').doc(userId);
+    int retryCount = 0;
+    const maxRetries = 5;
+
+    while (retryCount < maxRetries) {
+      try {
+        final userSnapshot = await userDoc.get();
+
+        // Check if the user document exists, create it if not
+        if (!userSnapshot.exists) {
+          await userDoc.set({
+            'lastSeen': FieldValue.serverTimestamp(),
+            'isOnline': isOnline,
+            'profileSet': false,
+          });
+        } else {
+          await userDoc.update({
+            'lastSeen': FieldValue.serverTimestamp(),
+            'isOnline': isOnline,
+          });
+        }
+        // If successful, break out of the loop
+        break;
+      } catch (e) {
+        if (e is FirebaseException && e.code == 'unavailable') {
+          retryCount++;
+          await Future.delayed(Duration(milliseconds: 200 * (1 << retryCount)));
+          continue; // Retry after the delay
+        } else {
+          debugPrint('Failed to update last seen status: $e');
+          break; // Exit if the error is not due to a transient condition
+        }
+      }
+    }
   }
 
   Future<DateTime?> fetchUserLastSeen(String userId) async {
