@@ -28,6 +28,7 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ChatProvider())
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'TALKY',
         theme: appTheme(),
         initialRoute: RouteNames.splash,

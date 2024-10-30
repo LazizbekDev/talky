@@ -50,8 +50,11 @@ class SendData extends StatelessWidget {
                     ),
                   ),
                   suffixIcon: IconButton(
-                    icon: const Icon(Icons.send_rounded),
-                    color: AppColors.textPrimary,
+                    icon: const ImageIcon(
+                      AssetImage('assets/images/send.png'),
+                      size: 20,
+                    ),
+                    color: AppColors.lightGray,
                     onPressed: () {
                       final text = controller.text.trim();
                       if (text.isNotEmpty) {
@@ -69,26 +72,40 @@ class SendData extends StatelessWidget {
             icon: Icons.add,
             activeIcon: Icons.close,
             buttonSize: const Size(56.0, 56.0),
-            backgroundColor: Colors.blue,
+            backgroundColor: AppColors.primaryColor,
             overlayOpacity: 0,
+            childPadding: const EdgeInsets.all(0),
+            spaceBetweenChildren: 20,
             children: [
               SpeedDialChild(
-                child: const Icon(Icons.attach_file, color: Colors.blue),
+                child: const Icon(
+                  Icons.mic,
+                  color: AppColors.primaryColor,
+                  size: 24,
+                ),
                 backgroundColor: Colors.white,
                 shape: const CircleBorder(),
-                onTap: chooseFile,
+                onTap: () => debugPrint('Microphone tapped'),
               ),
               SpeedDialChild(
-                child: const Icon(Icons.camera_alt, color: Colors.blue),
+                child: const Icon(
+                  Icons.camera_alt_outlined,
+                  color: AppColors.primaryColor,
+                  size: 24,
+                ),
                 backgroundColor: Colors.white,
                 shape: const CircleBorder(),
                 onTap: chooseImage,
               ),
               SpeedDialChild(
-                child: const Icon(Icons.mic, color: Colors.blue),
+                child: const ImageIcon(
+                  AssetImage('assets/images/file.png'),
+                  size: 20,
+                  color: AppColors.primaryColor,
+                ),
                 backgroundColor: Colors.white,
                 shape: const CircleBorder(),
-                onTap: () => debugPrint('Microphone tapped'),
+                onTap: chooseFile,
               ),
             ],
           )
