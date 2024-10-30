@@ -17,6 +17,16 @@ class Chat extends StatelessWidget {
     final userProvider = Provider.of<UserProvider>(context);
     WidgetsBinding.instance.addObserver(LifecycleObserver(userProvider));
     userProvider.updateLastSeenStatus(true);
+
+    Future<void> onLogOut(BuildContext context) async {
+      await userProvider.updateLastSeenStatus(false);
+      if (!context.mounted) return;
+      await Provider.of<sign_out.AuthProvider>(context, listen: false)
+          .signOut();
+      if (!context.mounted) return;
+      Navigator.pushReplacementNamed(context, RouteNames.splash);
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -44,7 +54,7 @@ class Chat extends StatelessWidget {
                   return const Center(child: Text('No users available'));
                 }
 
-                if (userProfile['email'] == null) {
+                if (userProfile == null) {
                   Navigator.pushReplacementNamed(context, RouteNames.profile);
                 }
 
@@ -140,11 +150,7 @@ class Chat extends StatelessWidget {
         width: 80,
         height: 80,
         child: FloatingActionButton(
-          onPressed: () {
-            userProvider.updateLastSeenStatus(false);
-            Provider.of<sign_out.AuthProvider>(context, listen: false)
-                .signOut();
-          },
+          onPressed: () => onLogOut(context),
           shape: const CircleBorder(),
           child: Image.asset(
             'assets/images/FloatingMenu.png',
