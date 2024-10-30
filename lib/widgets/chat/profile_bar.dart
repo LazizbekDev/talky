@@ -5,8 +5,13 @@ import 'package:talky/utilities/app_colors.dart';
 class ProfileBar extends StatelessWidget implements PreferredSizeWidget {
   final String? profileImageUrl;
   final String partnerName;
-  const ProfileBar(
-      {super.key, required this.profileImageUrl, required this.partnerName});
+  final String onlineStatus;
+  const ProfileBar({
+    super.key,
+    required this.profileImageUrl,
+    required this.partnerName,
+    required this.onlineStatus
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,12 +53,22 @@ class ProfileBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: true,
-      title: Text(
-        partnerName,
-        style: GoogleFonts.inter(
-          fontSize: 16,
-          fontWeight: FontWeight.w700,
-          color: AppColors.textPrimary,
+      title: ListTile(
+        title: Text(
+          partnerName,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        subtitle: Text(
+          onlineStatus,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            fontSize: 10,
+          ),
         ),
       ),
       actions: [

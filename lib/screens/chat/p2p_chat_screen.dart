@@ -16,12 +16,14 @@ class P2PChatScreen extends StatefulWidget {
   final String chatPartnerId;
   final String chatPartnerName;
   final String chatPartnerImage;
+  final String onlineStatus;
 
   const P2PChatScreen({
     super.key,
     required this.chatPartnerId,
     required this.chatPartnerName,
     required this.chatPartnerImage,
+    required this.onlineStatus
   });
 
   @override
@@ -86,6 +88,7 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
       appBar: ProfileBar(
         profileImageUrl: widget.chatPartnerImage,
         partnerName: widget.chatPartnerName,
+        onlineStatus: widget.onlineStatus,
       ),
       body: SafeArea(
         child: Padding(
@@ -167,12 +170,11 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: MessageBox(
-                                  sender: isMe,
-                                  message: message['message'] ?? '',
-                                  timestamp: messageDate,
-                                  imageUrls: imageUrls,
-                                  fileUrl: fileUrl
-                                ),
+                                    sender: isMe,
+                                    message: message['message'] ?? '',
+                                    timestamp: messageDate,
+                                    imageUrls: imageUrls,
+                                    fileUrl: fileUrl),
                               ),
                             ),
                           ],

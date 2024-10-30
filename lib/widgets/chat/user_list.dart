@@ -92,6 +92,7 @@ class UserList extends StatelessWidget {
               chatPartnerId: chatPartnerId,
               chatPartnerName: userName,
               chatPartnerImage: profileImageUrl,
+              onlineStatus: lastSeenTime,
             ),
           ),
         );
