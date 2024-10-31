@@ -31,119 +31,126 @@ class Chat extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            FutureBuilder<Map<String, dynamic>>(
-              future: userProvider.fetchUserProfileAndAllUsers(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FutureBuilder<Map<String, dynamic>>(
+                future: userProvider.fetchUserProfileAndAllUsers(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
 
-                if (!snapshot.hasData || snapshot.data == null) {
-                  return const Center(child: Text('No data found'));
-                }
+                  if (!snapshot.hasData || snapshot.data == null) {
+                    return const Center(child: Text('No data found'));
+                  }
 
-                final userProfile = snapshot.data!['userProfile'];
-                final allUsers = snapshot.data!['allUsers'];
+                  final userProfile = snapshot.data!['userProfile'];
+                  final allUsers = snapshot.data!['allUsers'];
 
-                if (allUsers.isEmpty) {
-                  return const Center(child: Text('No users available'));
-                }
+                  if (allUsers.isEmpty) {
+                    return const Center(child: Text('No users available'));
+                  }
 
-                if (userProfile == null) {
-                  Navigator.pushReplacementNamed(context, RouteNames.profile);
-                }
+                  if (userProfile == null) {
+                    Navigator.pushReplacementNamed(context, RouteNames.profile);
+                  }
 
-                final profileImageUrl = userProfile['image_url'];
+                  final profileImageUrl = userProfile['image_url'];
 
-                return Expanded(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CircleAvatar(
-                            radius: 27,
-                            backgroundImage: profileImageUrl != null
-                                ? NetworkImage(profileImageUrl)
-                                : null,
-                            child: profileImageUrl == null
-                                ? const Icon(Icons.person)
-                                : null,
-                          ),
-                          Text(
-                            userProfile['nick'] ?? 'User',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                  return Expanded(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CircleAvatar(
+                              radius: 27,
+                              backgroundImage: profileImageUrl != null
+                                  ? NetworkImage(profileImageUrl)
+                                  : null,
+                              child: profileImageUrl == null
+                                  ? const Icon(Icons.person)
+                                  : null,
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.search, size: 20),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Expanded(
-                        child: ListView.builder(
-                          padding: const EdgeInsets.all(0),
-                          itemCount: allUsers.length,
-                          itemBuilder: (context, index) {
-                            final user = allUsers[index];
-                            final chatPartnerId = user['uid'];
-
-                            return StreamBuilder<String?>(
-                              stream: Provider.of<ChatProvider>(context,
-                                      listen: false)
-                                  .getLastMessage(chatPartnerId),
-                              builder: (context, lastMessageSnapshot) {
-                                final lastMessage = lastMessageSnapshot.data;
-
-                                return FutureBuilder<DateTime?>(
-                                  future: userProvider
-                                      .fetchUserLastSeen(chatPartnerId),
-                                  builder: (context, lastSeenSnapshot) {
-                                    if (lastSeenSnapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return const CircularProgressIndicator();
-                                    }
-                                    if (lastSeenSnapshot.hasError) {
-                                      return const Text('Error loading status');
-                                    }
-
-                                    final lastSeenTime = lastSeenSnapshot.data;
-                                    final statusText = lastSeenTime == null
-                                        ? 'Online'
-                                        : DateFormat('dd MMM, HH:mm')
-                                            .format(lastSeenTime);
-
-                                    return UserList(
-                                      profileImageUrl: user['image_url'],
-                                      userName: user['nick'],
-                                      chatPartnerId: chatPartnerId,
-                                      lastMessage: lastMessage,
-                                      lastSeenTime: statusText,
-                                      isOnline: statusText == 'Online',
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
+                            Text(
+                              userProfile['nick'] ?? 'User',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.search, size: 20),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ]),
+                        const SizedBox(height: 20),
+                        Expanded(
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(0),
+                            itemCount: allUsers.length,
+                            itemBuilder: (context, index) {
+                              final user = allUsers[index];
+                              final chatPartnerId = user['uid'];
+
+                              return StreamBuilder<String?>(
+                                stream: Provider.of<ChatProvider>(context,
+                                        listen: false)
+                                    .getLastMessage(chatPartnerId),
+                                builder: (context, lastMessageSnapshot) {
+                                  final lastMessage = lastMessageSnapshot.data;
+
+                                  return FutureBuilder<DateTime?>(
+                                    future: userProvider
+                                        .fetchUserLastSeen(chatPartnerId),
+                                    builder: (context, lastSeenSnapshot) {
+                                      if (lastSeenSnapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const CircularProgressIndicator();
+                                      }
+                                      if (lastSeenSnapshot.hasError) {
+                                        return const Text(
+                                            'Error loading status');
+                                      }
+
+                                      final lastSeenTime =
+                                          lastSeenSnapshot.data;
+                                      final statusText = lastSeenTime == null
+                                          ? 'Online'
+                                          : DateFormat('dd MMM, HH:mm')
+                                              .format(lastSeenTime);
+
+                                      return UserList(
+                                        profileImageUrl: user['image_url'],
+                                        userName: user['nick'],
+                                        bio: user?['description'] ?? "",
+                                        chatPartnerId: chatPartnerId,
+                                        lastMessage: lastMessage,
+                                        lastSeenTime: statusText,
+                                        isOnline: statusText == 'Online',
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          
+          ),
         ),
       ),
       floatingActionButton: SizedBox(

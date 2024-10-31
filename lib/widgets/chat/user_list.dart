@@ -8,6 +8,7 @@ class UserList extends StatelessWidget {
     super.key,
     required this.profileImageUrl,
     required this.userName,
+    required this.bio,
     required this.chatPartnerId,
     required this.lastMessage,
     required this.lastSeenTime,
@@ -16,6 +17,7 @@ class UserList extends StatelessWidget {
 
   final dynamic profileImageUrl;
   final String userName;
+  final String bio;
   final String chatPartnerId;
   final String? lastMessage;
   final String lastSeenTime;
@@ -91,6 +93,7 @@ class UserList extends StatelessWidget {
             builder: (context) => P2PChatScreen(
               chatPartnerId: chatPartnerId,
               chatPartnerName: userName,
+              bio: bio,
               chatPartnerImage: profileImageUrl,
               onlineStatus: lastSeenTime,
             ),

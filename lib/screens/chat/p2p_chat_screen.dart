@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:talky/routes/route_names.dart';
 import 'package:talky/widgets/chat/message_box.dart';
 import 'package:talky/widgets/chat/profile_bar.dart';
 import 'package:talky/widgets/chat/send_data.dart';
@@ -16,6 +17,7 @@ class P2PChatScreen extends StatefulWidget {
   final String chatPartnerId;
   final String chatPartnerName;
   final String chatPartnerImage;
+  final String bio;
   final String onlineStatus;
 
   const P2PChatScreen({
@@ -23,7 +25,8 @@ class P2PChatScreen extends StatefulWidget {
     required this.chatPartnerId,
     required this.chatPartnerName,
     required this.chatPartnerImage,
-    required this.onlineStatus
+    required this.bio,
+    required this.onlineStatus,
   });
 
   @override
@@ -89,6 +92,14 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
         profileImageUrl: widget.chatPartnerImage,
         partnerName: widget.chatPartnerName,
         onlineStatus: widget.onlineStatus,
+        onPress: () {
+          Navigator.pushNamed(context, RouteNames.profileDetail, arguments: {
+            'imageUrl': widget.chatPartnerImage,
+            'nick': widget.chatPartnerName,
+            'bio': widget.bio,
+            'lastSeen': widget.onlineStatus,
+          });
+        },
       ),
       body: SafeArea(
         child: Padding(
@@ -170,11 +181,12 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: MessageBox(
-                                    sender: isMe,
-                                    message: message['message'] ?? '',
-                                    timestamp: messageDate,
-                                    imageUrls: imageUrls,
-                                    fileUrl: fileUrl),
+                                  sender: isMe,
+                                  message: message['message'] ?? '',
+                                  timestamp: messageDate,
+                                  imageUrls: imageUrls,
+                                  fileUrl: fileUrl,
+                                ),
                               ),
                             ),
                           ],

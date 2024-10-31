@@ -6,11 +6,13 @@ class ProfileBar extends StatelessWidget implements PreferredSizeWidget {
   final String? profileImageUrl;
   final String partnerName;
   final String onlineStatus;
+  final VoidCallback onPress;
   const ProfileBar({
     super.key,
     required this.profileImageUrl,
     required this.partnerName,
-    required this.onlineStatus
+    required this.onlineStatus,
+    required this.onPress,
   });
 
   @override
@@ -53,30 +55,36 @@ class ProfileBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: true,
-      title: ListTile(
-        title: Text(
-          partnerName,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: AppColors.textPrimary,
+      title: GestureDetector(
+        onTap: onPress,
+        child: ListTile(
+          title: Text(
+            partnerName,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textPrimary,
+            ),
           ),
-        ),
-        subtitle: Text(
-          onlineStatus,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            fontSize: 10,
+          subtitle: Text(
+            onlineStatus,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(
+              fontSize: 10,
+            ),
           ),
         ),
       ),
       actions: [
-        CircleAvatar(
-          radius: 22,
-          backgroundImage:
-              profileImageUrl != null ? NetworkImage(profileImageUrl!) : null,
-          child: profileImageUrl == null ? const Icon(Icons.person) : null,
+        GestureDetector(
+          onTap: onPress,
+          child: CircleAvatar(
+            radius: 22,
+            backgroundImage:
+                profileImageUrl != null ? NetworkImage(profileImageUrl!) : null,
+            child: profileImageUrl == null ? const Icon(Icons.person) : null,
+          ),
         ),
         const SizedBox(width: 10),
       ],
