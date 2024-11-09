@@ -43,7 +43,6 @@ class MessageBox extends StatelessWidget {
               ),
             ),
           ),
-
         if (message.isNotEmpty)
           Container(
             padding: const EdgeInsets.all(10),
@@ -58,7 +57,6 @@ class MessageBox extends StatelessWidget {
               ),
             ),
           ),
-
         if (fileUrl.isNotEmpty)
           GestureDetector(
             onTap: () => _openFile(fileUrl),
@@ -89,7 +87,6 @@ class MessageBox extends StatelessWidget {
               ),
             ),
           ),
-
         Padding(
           padding: const EdgeInsets.only(top: 5.0),
           child: Text(

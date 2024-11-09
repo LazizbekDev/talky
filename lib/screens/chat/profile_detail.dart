@@ -8,6 +8,7 @@ class ProfileDetail extends StatelessWidget {
   final String nickName;
   final String? bio;
   final String lastSeen;
+  final List<String> images;
 
   const ProfileDetail({
     super.key,
@@ -15,6 +16,7 @@ class ProfileDetail extends StatelessWidget {
     required this.nickName,
     required this.bio,
     required this.lastSeen,
+    this.images = const []
   });
 
   @override
@@ -94,7 +96,9 @@ class ProfileDetail extends StatelessWidget {
                           ),
                         ),
                   const SizedBox(height: 10),
-                  const ChatTab(),
+                  ChatTab(
+                    images: images,
+                  ),
                 ],
               ),
             ),

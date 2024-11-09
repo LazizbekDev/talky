@@ -36,6 +36,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           nickName: args?['nick'],
           bio: args?['bio'],
           lastSeen: args?['lastSeen'] ?? "",
+          images: args?['imageUrls'] ?? <String>[],
         ),
       );
 

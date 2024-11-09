@@ -87,6 +87,7 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
   @override
   Widget build(BuildContext context) {
     final chatProvider = Provider.of<ChatProvider>(context);
+    List allImages = [];
     return Scaffold(
       appBar: ProfileBar(
         profileImageUrl: widget.chatPartnerImage,
@@ -98,6 +99,7 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
             'nick': widget.chatPartnerName,
             'bio': widget.bio,
             'lastSeen': widget.onlineStatus,
+            'imageUrls': allImages.cast<String>()
           });
         },
       ),
@@ -138,6 +140,7 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                         List<String> imageUrls = [];
                         if (imageUrl.isNotEmpty) {
                           imageUrls.add(imageUrl);
+                          allImages.add(imageUrl);
                         }
                         final isMe = message['senderId'] ==
                             FirebaseAuth.instance.currentUser!.uid;

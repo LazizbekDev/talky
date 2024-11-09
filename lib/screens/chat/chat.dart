@@ -65,31 +65,44 @@ class Chat extends StatelessWidget {
                   return Expanded(
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CircleAvatar(
-                              radius: 27,
-                              backgroundImage: profileImageUrl != null
-                                  ? NetworkImage(profileImageUrl)
-                                  : null,
-                              child: profileImageUrl == null
-                                  ? const Icon(Icons.person)
-                                  : null,
-                            ),
-                            Text(
-                              userProfile['nick'] ?? 'User',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.textPrimary,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, RouteNames.profileDetail,
+                                arguments: {
+                                  'imageUrl': profileImageUrl,
+                                  'nick': userProfile['nick'] ?? 'User',
+                                  'bio': userProfile['description'] ?? '',
+                                  'lastSeen': 'Online',
+                                  'imageUrls': <String>[],
+                                });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CircleAvatar(
+                                radius: 27,
+                                backgroundImage: profileImageUrl != null
+                                    ? NetworkImage(profileImageUrl)
+                                    : null,
+                                child: profileImageUrl == null
+                                    ? const Icon(Icons.person)
+                                    : null,
                               ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.search, size: 20),
-                            ),
-                          ],
+                              Text(
+                                userProfile['nick'] ?? 'User',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(Icons.search, size: 20),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 20),
                         Expanded(
@@ -149,7 +162,6 @@ class Chat extends StatelessWidget {
                 },
               ),
             ],
-          
           ),
         ),
       ),
