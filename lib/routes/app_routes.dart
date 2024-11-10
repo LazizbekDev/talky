@@ -29,7 +29,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const SetProfile());
     case RouteNames.profileDetail:
       final args = settings.arguments as Map<String, dynamic>?;
-      debugPrint("from routes: ${args?['bio']}");
       return MaterialPageRoute(
         builder: (_) => ProfileDetail(
           imageUrl: args?['imageUrl'],

@@ -11,8 +11,8 @@ class UserList extends StatelessWidget {
     required this.bio,
     required this.chatPartnerId,
     required this.lastMessage,
-    required this.lastSeenTime,
-    required this.isOnline,
+    this.lastSeenTime = '',
+    this.isOnline = false,
   });
 
   final dynamic profileImageUrl;
@@ -39,8 +39,8 @@ class UserList extends StatelessWidget {
             bottom: 0,
             right: 0,
             child: Container(
-              width: 12,
-              height: 12,
+              width: 14,
+              height: 14,
               decoration: BoxDecoration(
                 color: isOnline ? Colors.green : Colors.grey,
                 shape: BoxShape.circle,

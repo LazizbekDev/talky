@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:talky/providers/auth_provider.dart' as sign_out;
 import 'package:provider/provider.dart';
 import 'package:talky/providers/chat_provider.dart';
@@ -7,6 +8,7 @@ import 'package:talky/providers/users_provider.dart';
 import 'package:talky/routes/route_names.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/utilities/lifecycle_observer.dart';
+import 'package:talky/widgets/chat/chat_modal.dart';
 import 'package:talky/widgets/chat/user_list.dart';
 
 class Chat extends StatelessWidget {
@@ -14,6 +16,8 @@ class Chat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController contactController = TextEditingController();
+
     final userProvider = Provider.of<UserProvider>(context);
     WidgetsBinding.instance.addObserver(LifecycleObserver(userProvider));
     userProvider.updateLastSeenStatus(true);
@@ -38,7 +42,10 @@ class Chat extends StatelessWidget {
                 future: userProvider.fetchUserProfileAndAllUsers(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Align(
+                      alignment: Alignment.topRight,
+                      child: CircularProgressIndicator(),
+                    );
                   }
 
                   if (snapshot.hasError) {
@@ -98,7 +105,7 @@ class Chat extends StatelessWidget {
                                 ),
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () => onLogOut(context),
                                 icon: const Icon(Icons.search, size: 20),
                               ),
                             ],
@@ -140,15 +147,18 @@ class Chat extends StatelessWidget {
                                           : DateFormat('dd MMM, HH:mm')
                                               .format(lastSeenTime);
 
-                                      return UserList(
-                                        profileImageUrl: user['image_url'],
-                                        userName: user['nick'],
-                                        bio: user?['description'] ?? "",
-                                        chatPartnerId: chatPartnerId,
-                                        lastMessage: lastMessage,
-                                        lastSeenTime: statusText,
-                                        isOnline: statusText == 'Online',
-                                      );
+                                      return lastMessage != ''
+                                          ? UserList(
+                                              profileImageUrl:
+                                                  user['image_url'],
+                                              userName: user['nick'],
+                                              bio: user?['description'] ?? "",
+                                              chatPartnerId: chatPartnerId,
+                                              lastMessage: lastMessage,
+                                              lastSeenTime: statusText,
+                                              isOnline: statusText == 'Online',
+                                            )
+                                          : const SizedBox.shrink();
                                     },
                                   );
                                 },
@@ -169,7 +179,15 @@ class Chat extends StatelessWidget {
         width: 80,
         height: 80,
         child: FloatingActionButton(
-          onPressed: () => onLogOut(context),
+          onPressed: () => showCupertinoModalBottomSheet(
+            topRadius: const Radius.circular(10),
+            context: context,
+            builder: (context) => ChatModal(
+              title: 'Chat',
+              complete: !true,
+              controller: contactController,
+            ),
+          ),
           shape: const CircleBorder(),
           child: Image.asset(
             'assets/images/FloatingMenu.png',
