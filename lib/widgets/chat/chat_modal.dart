@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/providers/chat_provider.dart';
 import 'package:talky/providers/users_provider.dart';
@@ -12,15 +13,17 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
   final bool complete;
   final TextEditingController controller;
 
-  const ChatModal(
-      {super.key,
-      required this.title,
-      this.complete = false,
-      required this.controller});
+  const ChatModal({
+    super.key,
+    required this.title,
+    this.complete = false,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
+    final TextEditingController groupController = TextEditingController();
 
     return Scaffold(
       appBar: PreferredSize(
@@ -123,12 +126,23 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
                     size: 20,
                   ),
                 ),
-                title: Text(
-                  'Start a new group chat',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                    color: AppColors.textPrimary,
+                title: GestureDetector(
+                  onTap: () => showCupertinoModalBottomSheet(
+                    topRadius: const Radius.circular(10),
+                    context: context,
+                    builder: (context) => ChatModal(
+                      title: 'Group',
+                      complete: true,
+                      controller: groupController,
+                    ),
+                  ),
+                  child: Text(
+                    'Start a new group chat',
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                 ),
                 trailing: const Icon(

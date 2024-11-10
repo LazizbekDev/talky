@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:talky/utilities/app_colors.dart';
@@ -10,14 +11,13 @@ class ProfileDetail extends StatelessWidget {
   final String lastSeen;
   final List<String> images;
 
-  const ProfileDetail({
-    super.key,
-    required this.imageUrl,
-    required this.nickName,
-    required this.bio,
-    required this.lastSeen,
-    this.images = const []
-  });
+  const ProfileDetail(
+      {super.key,
+      required this.imageUrl,
+      required this.nickName,
+      required this.bio,
+      required this.lastSeen,
+      this.images = const []});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,8 @@ class ProfileDetail extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 120,
-                    backgroundImage: NetworkImage(imageUrl),
+                    backgroundColor: const Color(0xFFF0F0F0),
+                    backgroundImage: CachedNetworkImageProvider(imageUrl),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 20, bottom: 10),

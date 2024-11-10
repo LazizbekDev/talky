@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:talky/utilities/app_colors.dart';
@@ -81,8 +82,10 @@ class ProfileBar extends StatelessWidget implements PreferredSizeWidget {
           onTap: onPress,
           child: CircleAvatar(
             radius: 22,
-            backgroundImage:
-                profileImageUrl != null ? NetworkImage(profileImageUrl!) : null,
+            backgroundColor: const Color(0xFFF0F0F0),
+            backgroundImage: profileImageUrl != null
+                ? CachedNetworkImageProvider(profileImageUrl!)
+                : null,
             child: profileImageUrl == null ? const Icon(Icons.person) : null,
           ),
         ),

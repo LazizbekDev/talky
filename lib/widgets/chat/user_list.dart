@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:talky/screens/chat/p2p_chat_screen.dart';
 import 'package:talky/utilities/app_colors.dart';
 
@@ -31,8 +32,10 @@ class UserList extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 24,
-            backgroundImage:
-                profileImageUrl != null ? NetworkImage(profileImageUrl) : null,
+            backgroundColor: const Color(0xFFF0F0F0),
+            backgroundImage: profileImageUrl != null
+                ? CachedNetworkImageProvider(profileImageUrl)
+                : null,
             child: profileImageUrl == null ? const Icon(Icons.person) : null,
           ),
           Positioned(
