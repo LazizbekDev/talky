@@ -31,11 +31,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final args = settings.arguments as Map<String, dynamic>?;
       return MaterialPageRoute(
         builder: (_) => ProfileDetail(
-          imageUrl: args?['imageUrl'],
-          nickName: args?['nick'],
-          bio: args?['bio'],
-          lastSeen: args?['lastSeen'] ?? "",
           images: args?['imageUrls'] ?? <String>[],
+          userId: args?['userId'],
         ),
       );
 

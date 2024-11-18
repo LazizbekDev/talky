@@ -77,10 +77,7 @@ class Chat extends StatelessWidget {
                             Navigator.pushNamed(
                                 context, RouteNames.profileDetail,
                                 arguments: {
-                                  'imageUrl': profileImageUrl,
-                                  'nick': userProfile['nick'] ?? 'User',
-                                  'bio': userProfile['description'] ?? '',
-                                  'lastSeen': 'Online',
+                                  'userId': userProfile['uid'],
                                   'imageUrls': <String>[],
                                 });
                           },

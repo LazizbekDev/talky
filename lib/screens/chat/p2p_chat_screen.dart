@@ -95,10 +95,7 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
         onlineStatus: widget.onlineStatus,
         onPress: () {
           Navigator.pushNamed(context, RouteNames.profileDetail, arguments: {
-            'imageUrl': widget.chatPartnerImage,
-            'nick': widget.chatPartnerName,
-            'bio': widget.bio,
-            'lastSeen': widget.onlineStatus,
+            'userId': widget.chatPartnerId,
             'imageUrls': allImages.cast<String>()
           });
         },

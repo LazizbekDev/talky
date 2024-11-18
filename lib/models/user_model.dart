@@ -1,31 +1,44 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
   String uid;
-  String nickname;
-  String bio;
-  String profilePictureUrl;
+  String nick;
+  String description;
+  String imageUrl;
+  DateTime lastSeen;
+  bool isOnline;
 
   UserModel({
     required this.uid,
-    required this.nickname,
-    required this.bio,
-    required this.profilePictureUrl,
+    required this.nick,
+    required this.description,
+    required this.imageUrl,
+    required this.lastSeen,
+    required this.isOnline,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> data) {
     return UserModel(
-      uid: data['uid'],
-      nickname: data['nickname'],
-      bio: data['bio'],
-      profilePictureUrl: data['profilePictureUrl'],
+      uid: data['uid'] ?? '',
+      nick: data['nick'] ?? 'Unknown',
+      description: data['description'] ?? '',
+      imageUrl: data['image_url'] ?? '',
+      lastSeen: data['lastSeen'] is Timestamp
+          ? (data['lastSeen'] as Timestamp)
+              .toDate()
+          : DateTime.now(),
+      isOnline: data['isOnline'] ?? false,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
-      'nickname': nickname,
-      'bio': bio,
-      'profilePictureUrl': profilePictureUrl,
+      'nick': nick,
+      'description': description,
+      'image_url': imageUrl,
+      'lastSeen': lastSeen,
+      'isOnline': isOnline,
     };
   }
 }

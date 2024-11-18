@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:talky/models/user_model.dart';
 
 class UserProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  UserModel? _user;
+  UserModel? get user => _user;
 
   Future<Map<String, dynamic>> fetchUserProfileAndAllUsers() async {
     try {
@@ -30,8 +33,8 @@ class UserProvider with ChangeNotifier {
       final userProfile = results[0] as DocumentSnapshot;
       final usersSnapshot = results[1] as QuerySnapshot;
 
-      debugPrint('User profile: ${userProfile.data()}');
-      debugPrint('Fetched ${usersSnapshot.docs.length} users');
+      // debugPrint('User profile: ${userProfile.data()}');
+      // debugPrint('Fetched ${usersSnapshot.docs.length} users');
 
       return {
         'userProfile': userProfile.data() as Map<String, dynamic>?,
@@ -42,6 +45,31 @@ class UserProvider with ChangeNotifier {
     } catch (e) {
       debugPrint('Error while fetching user data: $e');
       throw Exception('Failed to fetch data');
+    }
+  }
+
+  Future<UserModel?> fetchUserDetail({required String userId}) async {
+    try {
+      final fetchId =
+          userId == _auth.currentUser?.uid ? _auth.currentUser!.uid : userId;
+
+      final userDoc = await _firestore.collection('users').doc(fetchId).get();
+
+      if (!userDoc.exists) {
+        debugPrint('User profile not found');
+        return null;
+      }
+
+      final data = userDoc.data();
+
+      if (data != null) {
+        return UserModel.fromMap(data);
+      }
+
+      return null;
+    } catch (err) {
+      debugPrint('Error fetching user: $err');
+      throw Exception('Failed to fetch user data');
     }
   }
 
