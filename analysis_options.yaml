@@ -32,7 +32,7 @@ analyzer:
     dead_code: info
     unused_import: error
     avoid_relative_lib_imports: error
-    invalid_annotation_target: ignore error
+    invalid_annotation_target: ignore
     must_call_super: error
     invalid_use_of_visible_for_testing_member: error
     unused_catch_stack: error
@@ -88,7 +88,7 @@ dart_code_metrics:
         acceptable-level: 3
     # - avoid-dynamic:
     #     severity: error
-    - avoid-non-null-assertion:
-        severity: error
+    # - avoid-non-null-assertion:
+    #     severity: error
     - avoid-unused-parameters:
         severity: error

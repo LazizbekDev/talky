@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/providers/chat_provider.dart';
-import 'package:talky/providers/users_provider.dart';
+import 'package:talky/providers/user_provider.dart';
 import 'package:talky/routes/app_routes.dart';
 import 'package:talky/routes/route_names.dart';
 import 'package:talky/services/auth/firebase_auth_service.dart';

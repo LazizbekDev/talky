@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/providers/chat_provider.dart';
-import 'package:talky/providers/users_provider.dart';
+import 'package:talky/providers/user_provider.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/chat/user_list.dart';
 

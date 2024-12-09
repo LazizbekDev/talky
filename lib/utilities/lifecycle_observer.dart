@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:talky/providers/users_provider.dart';
+import 'package:talky/providers/user_provider.dart';
 
 class LifecycleObserver extends WidgetsBindingObserver {
   LifecycleObserver(this.userProvider);

@@ -5,7 +5,10 @@ import 'package:talky/services/chat/chat_service.dart';
 import 'package:talky/services/storage_service.dart';
 
 class ChatProvider with ChangeNotifier {
-  ChatProvider(this._chatService, this._storageService);
+  ChatProvider(
+    this._chatService,
+    this._storageService,
+  );
   final ChatService _chatService;
   final StorageService _storageService;
 

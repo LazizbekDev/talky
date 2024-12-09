@@ -60,7 +60,7 @@ class UserProvider with ChangeNotifier {
   Future<UserModel?> fetchUserDetail({required String userId}) async {
     try {
       final fetchId =
-          userId == _auth.currentUser?.uid ? _auth.currentUser!.uid : userId;
+          userId == _auth.currentUser?.uid ? _auth.currentUser?.uid : userId;
 
       final userDoc = await _firestore.collection('users').doc(fetchId).get();
 
