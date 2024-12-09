@@ -9,16 +9,15 @@ import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/chat/user_list.dart';
 
 class ChatModal extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final bool complete;
-  final TextEditingController controller;
-
   const ChatModal({
     super.key,
     required this.title,
     this.complete = false,
     required this.controller,
   });
+  final String title;
+  final bool complete;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {

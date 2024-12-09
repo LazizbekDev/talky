@@ -3,9 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:talky/utilities/app_colors.dart';
 
 class Suggest extends StatelessWidget {
+  const Suggest({super.key, this.login = false, required this.onTap});
   final bool login;
   final Function() onTap;
-  const Suggest({super.key, this.login = false, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

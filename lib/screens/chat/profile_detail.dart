@@ -11,9 +11,9 @@ import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/chat/chat_tab.dart';
 
 class ProfileDetail extends StatelessWidget {
+  const ProfileDetail({super.key, required this.userId, required this.images});
   final String userId;
   final List<String> images;
-  const ProfileDetail({super.key, required this.userId, required this.images});
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,8 @@ class ProfileDetail extends StatelessWidget {
                       const PopupMenuDivider(),
                       PopupMenuItem<String>(
                         value: 'logout',
-                        onTap: () => onLogOut(context),
+                        onTap: () => Navigator.pushReplacementNamed(
+                            context, RouteNames.splash),
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

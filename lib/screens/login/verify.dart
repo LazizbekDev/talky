@@ -11,9 +11,9 @@ import 'package:talky/widgets/logo.dart';
 import 'package:talky/widgets/login/suggest.dart';
 
 class Verify extends StatelessWidget {
+  const Verify({super.key, this.email, this.password});
   final String? email;
   final String? password;
-  const Verify({super.key, this.email, this.password});
 
   @override
   Widget build(BuildContext context) {

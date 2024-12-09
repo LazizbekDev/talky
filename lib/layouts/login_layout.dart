@@ -2,14 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:talky/widgets/logo.dart';
 
 class LoginLayout extends StatelessWidget {
-  final Widget caption;
-  final Widget email;
-  final Widget password;
-  final Widget forgotPassword;
-  final Widget agreement;
-  final Widget button;
-  final Widget suggestion;
-
   const LoginLayout({
     super.key,
     required this.caption,
@@ -20,6 +12,13 @@ class LoginLayout extends StatelessWidget {
     required this.button,
     required this.suggestion,
   });
+  final Widget caption;
+  final Widget email;
+  final Widget password;
+  final Widget forgotPassword;
+  final Widget agreement;
+  final Widget button;
+  final Widget suggestion;
 
   @override
   Widget build(BuildContext context) {

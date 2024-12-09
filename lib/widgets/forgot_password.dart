@@ -3,9 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:talky/utilities/app_colors.dart';
 
 class ForgotPassword extends StatelessWidget {
-  final VoidCallback onPressed;
-
   const ForgotPassword({super.key, required this.onPressed});
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {

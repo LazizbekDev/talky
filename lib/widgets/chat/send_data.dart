@@ -4,11 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:talky/utilities/app_colors.dart';
 
 class SendData extends StatelessWidget {
-  final Function({String? text, String? imageUrl}) sendToChat;
-  final VoidCallback chooseImage;
-  final VoidCallback chooseFile;
-  final TextEditingController controller;
-
   const SendData({
     super.key,
     required this.sendToChat,
@@ -16,6 +11,10 @@ class SendData extends StatelessWidget {
     required this.chooseFile,
     required this.controller,
   });
+  final Function({String? text, String? imageUrl}) sendToChat;
+  final VoidCallback chooseImage;
+  final VoidCallback chooseFile;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {

@@ -6,6 +6,10 @@ import 'package:talky/providers/chat_provider.dart';
 import 'package:talky/providers/users_provider.dart';
 import 'package:talky/routes/app_routes.dart';
 import 'package:talky/routes/route_names.dart';
+import 'package:talky/services/auth/firebase_auth_service.dart';
+import 'package:talky/services/auth/firestore_service.dart';
+import 'package:talky/services/chat/chat_service.dart';
+import 'package:talky/services/storage_service.dart';
 import 'package:talky/utilities/app_theme.dart';
 
 class App extends StatelessWidget {
@@ -23,9 +27,21 @@ class App extends StatelessWidget {
     );
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(
+            FirebaseAuthService(),
+            FirestoreService(),
+            StorageService(),
+          ),
+        ),
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => ChatProvider())
+        ChangeNotifierProvider(
+            create: (_) => ChatProvider(
+                  ChatService(
+                    StorageService(),
+                  ),
+                  StorageService(),
+                ))
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

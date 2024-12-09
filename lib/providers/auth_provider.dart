@@ -1,13 +1,22 @@
 import 'dart:typed_data';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:email_otp/email_otp.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:talky/services/auth/firebase_auth_service.dart';
+import 'package:talky/services/auth/firestore_service.dart';
+import 'package:talky/services/storage_service.dart';
 
 class AuthProvider extends ChangeNotifier {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  AuthProvider(
+      this._authService, this._firestoreService, this._storageService) {
+    _authService.authStateChanges.listen((User? user) {
+      _user = user;
+      notifyListeners();
+    });
+  }
+  final FirebaseAuthService _authService;
+  final FirestoreService _firestoreService;
+  final StorageService _storageService;
+
   User? _user;
   bool _loading = false;
   bool _isUploading = false;
@@ -29,16 +38,9 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  AuthProvider() {
-    _auth.authStateChanges().listen((User? user) {
-      _user = user;
-      notifyListeners();
-    });
-  }
-
   Future<void> signIn(String email, String password) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      _user = await _authService.signIn(email, password);
       notifyListeners();
     } catch (e) {
       handleError(e);
@@ -51,12 +53,7 @@ class AuthProvider extends ChangeNotifier {
     required String otp,
   }) async {
     try {
-      bool isVerified = EmailOTP.verifyOTP(otp: otp);
-      if (!isVerified) {
-        throw Exception('Invalid OTP. Please try again.');
-      }
-      await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      _user = await _authService.signUp(email, password);
       notifyListeners();
     } catch (e) {
       handleError(e);
@@ -66,19 +63,14 @@ class AuthProvider extends ChangeNotifier {
   Future<void> signInWithGoogle() async {
     setIsLoading(true);
     try {
-      final googleUser = await GoogleSignIn(scopes: ['email']).signIn();
-      if (googleUser == null) return;
-
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final userCredential = await _auth.signInWithCredential(credential);
-      if (userCredential.user != null) {
-        _user = userCredential.user;
-        await _saveUserDataToFirestore();
+      _user = await _authService.signInWithGoogle();
+      if (_user != null) {
+        await _firestoreService.saveUserData(_user!.uid, {
+          'nick': _user?.displayName,
+          'email': _user?.email,
+          'image_url': _user?.photoURL,
+          'uid': _user?.uid,
+        });
         notifyListeners();
       }
     } catch (e) {
@@ -89,17 +81,6 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _saveUserDataToFirestore() async {
-    if (_user != null) {
-      await FirebaseFirestore.instance.collection('users').doc(_user!.uid).set({
-        'nick': _user?.displayName,
-        'email': _user?.email,
-        'image_url': _user?.photoURL,
-        'uid': _user?.uid,
-      }, SetOptions(merge: true));
-    }
-  }
-
   Future<void> uploadUserInfoToFirestore({
     required String nick,
     required dynamic selectedImage,
@@ -107,37 +88,30 @@ class AuthProvider extends ChangeNotifier {
   }) async {
     try {
       setIsUploading(true);
-      if (nick.isEmpty) {
-        throw Exception('Please enter your nickname.');
-      }
-
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('user_images')
-          .child('${_user!.uid}.jpg');
       Uint8List imageBytes = await selectedImage.readAsBytes();
-      final uploadTask = await storageRef.putData(imageBytes);
-      final imageUrl = await uploadTask.ref.getDownloadURL();
+      final imageUrl = await _storageService.uploadFile(
+        'user_images/${_user!.uid}.jpg',
+        imageBytes,
+      );
 
-      await FirebaseFirestore.instance.collection('users').doc(_user!.uid).set({
-        'email': _user?.email,
-        'image_url': imageUrl,
-        'nick': nick,
-        'description': description,
-        'uid': user?.uid,
-      });
+      await _firestoreService.uploadUserProfileImage(
+        uid: _user!.uid,
+        imageUrl: imageUrl,
+        nick: nick,
+        description: description,
+      );
 
       _profileImageUrl = imageUrl;
       setIsUploading(false);
       notifyListeners();
-    } catch (err) {
-      handleError(err);
+    } catch (e) {
+      handleError(e);
     }
   }
 
   Future<void> signOut() async {
     try {
-      await _auth.signOut();
+      await _authService.signOut();
       _user = null;
       notifyListeners();
     } catch (e) {
@@ -147,7 +121,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> resetPassword(String email) async {
     try {
-      await _auth.sendPasswordResetEmail(email: email);
+      await _authService.resetPassword(email);
     } catch (e) {
       handleError(e);
     }

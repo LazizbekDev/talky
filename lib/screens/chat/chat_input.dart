@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ChatInputField extends StatefulWidget {
-  final Function() sendMessage;
   const ChatInputField({super.key, required this.sendMessage});
+  final Function() sendMessage;
 
   @override
   State<ChatInputField> createState() => _ChatInputFieldState();
 }
 
-class _ChatInputFieldState extends State<ChatInputField> with SingleTickerProviderStateMixin {
+class _ChatInputFieldState extends State<ChatInputField>
+    with SingleTickerProviderStateMixin {
   bool isExpanded = false;
   late AnimationController _controller;
   late Animation<double> _iconAnimation;
@@ -45,20 +46,17 @@ class _ChatInputFieldState extends State<ChatInputField> with SingleTickerProvid
             children: [
               FloatingActionButton(
                 mini: true,
-                onPressed: () {
-                },
+                onPressed: () {},
                 child: const Icon(Icons.attach_file),
               ),
               FloatingActionButton(
                 mini: true,
-                onPressed: () {
-                },
+                onPressed: () {},
                 child: const Icon(Icons.camera_alt),
               ),
               FloatingActionButton(
                 mini: true,
-                onPressed: () {
-                },
+                onPressed: () {},
                 child: const Icon(Icons.mic),
               ),
             ],
@@ -67,7 +65,8 @@ class _ChatInputFieldState extends State<ChatInputField> with SingleTickerProvid
           children: [
             Expanded(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(30.0),

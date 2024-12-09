@@ -6,7 +6,6 @@ ThemeData appTheme() {
     primaryColor: AppColors.primaryColor,
     hintColor: AppColors.secondaryColor,
     cardColor: AppColors.errorColor,
-
     colorScheme: const ColorScheme(
       primary: AppColors.primaryColor,
       secondary: AppColors.secondaryColor,
@@ -18,13 +17,14 @@ ThemeData appTheme() {
       onError: Colors.white,
       brightness: Brightness.light,
     ),
-
     textTheme: const TextTheme(
-      displayLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.primaryColor),
+      displayLarge: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: AppColors.primaryColor),
       bodyLarge: TextStyle(fontSize: 16, color: Colors.black),
       labelLarge: TextStyle(color: Colors.white),
     ),
-
     buttonTheme: const ButtonThemeData(
       buttonColor: AppColors.primaryColor,
       textTheme: ButtonTextTheme.primary,

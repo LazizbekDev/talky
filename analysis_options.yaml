@@ -1,1 +1,94 @@
 include: package:flutter_lints/flutter.yaml
+
+# todo добавить ошибки на override
+linter:
+  rules:
+    - avoid_relative_lib_imports
+    - avoid_unnecessary_containers
+    - avoid_multiple_declarations_per_line
+    - hash_and_equals
+    - valid_regexps
+    - sort_constructors_first
+    - sort_child_properties_last
+    - sort_unnamed_constructors_first
+    - sized_box_for_whitespace
+    - always_declare_return_types  #todo to error
+    - depend_on_referenced_packages
+
+# Используем code_metrics для расширенного анализа
+analyzer:
+  exclude:
+    - lib/localization/generated/**
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+    - 'bricks/*/__brick__/**'
+    - 'bricks/*/hooks/**'
+  
+  plugins:
+    - dart_code_metrics
+  errors:
+    missing_required_param: error
+    missing_return: error
+    dead_code: info
+    unused_import: error
+    avoid_relative_lib_imports: error
+    invalid_annotation_target: ignore error
+    must_call_super: error
+    invalid_use_of_visible_for_testing_member: error
+    unused_catch_stack: error
+    invalid_null_aware_operator: error
+    dead_null_aware_expression: error
+    duplicate_import: error
+    unused_local_variable: error
+    unused_field: error
+    lines_longer_than_80_chars: ignore
+
+dart_code_metrics:
+  # Игнорируем генерируемые файлы для проверок код-стайла + тесты
+  rules-exclude:
+    - ./**/*.g.dart
+    - ./**/*.freezed.dart
+    - ./**/generated/**
+    - test/**
+  metrics:
+    cyclomatic-complexity: 20
+    number-of-parameters: 4
+    maximum-nesting-level: 3
+  rules:
+    - avoid-cascade-after-if-null
+    - avoid-double-slash-imports
+    - avoid-duplicate-exports
+    - avoid-redundant-async
+    - avoid-unnecessary-conditionals
+    - avoid-unnecessary-type-assertions
+    - avoid-unnecessary-type-casts
+    - avoid-unrelated-type-assertions
+    - avoid-returning-widgets
+    - avoid-shrink-wrap-in-lists
+    - always-remove-listener
+    - binary-expression-operand-order
+    - double-literal-format
+    - list-all-equatable-fields
+    - no-boolean-literal-compare
+    - no-boolean-literal-compare
+    - no-empty-block
+    - no-equal-then-else
+    - no-object-declaration
+    - prefer-enums-by-name
+    - prefer-first
+    - prefer-last
+    - prefer-immediate-return
+    - prefer-match-file-name
+    - prefer-moving-to-variable
+    - prefer-conditional-expressions
+    - prefer-trailing-comma:
+        break-on: 3
+    - prefer-correct-edge-insets-constructor
+    - avoid-nested-conditional-expressions:
+        acceptable-level: 3
+    # - avoid-dynamic:
+    #     severity: error
+    - avoid-non-null-assertion:
+        severity: error
+    - avoid-unused-parameters:
+        severity: error

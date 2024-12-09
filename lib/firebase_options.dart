@@ -63,9 +63,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '374353091800',
     projectId: 'talky-test-signin',
     storageBucket: 'talky-test-signin.appspot.com',
-    androidClientId: '374353091800-kkuirgk2g1p9mitj2tgguva5ha4bmnmf.apps.googleusercontent.com',
-    iosClientId: '374353091800-6rle6oedqs0guro2a5p58pcg6s0mlkoc.apps.googleusercontent.com',
+    androidClientId:
+        '374353091800-kkuirgk2g1p9mitj2tgguva5ha4bmnmf.apps.googleusercontent.com',
+    iosClientId:
+        '374353091800-6rle6oedqs0guro2a5p58pcg6s0mlkoc.apps.googleusercontent.com',
     iosBundleId: 'com',
   );
-
 }

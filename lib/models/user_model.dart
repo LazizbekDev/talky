@@ -1,13 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-  String uid;
-  String nick;
-  String description;
-  String imageUrl;
-  DateTime lastSeen;
-  bool isOnline;
-
   UserModel({
     required this.uid,
     required this.nick,
@@ -24,12 +17,17 @@ class UserModel {
       description: data['description'] ?? '',
       imageUrl: data['image_url'] ?? '',
       lastSeen: data['lastSeen'] is Timestamp
-          ? (data['lastSeen'] as Timestamp)
-              .toDate()
+          ? (data['lastSeen'] as Timestamp).toDate()
           : DateTime.now(),
       isOnline: data['isOnline'] ?? false,
     );
   }
+  String uid;
+  String nick;
+  String description;
+  String imageUrl;
+  DateTime lastSeen;
+  bool isOnline;
 
   Map<String, dynamic> toMap() {
     return {

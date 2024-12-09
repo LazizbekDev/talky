@@ -4,10 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:talky/utilities/app_colors.dart';
 
 class ProfileBar extends StatelessWidget implements PreferredSizeWidget {
-  final String? profileImageUrl;
-  final String partnerName;
-  final String onlineStatus;
-  final VoidCallback onPress;
   const ProfileBar({
     super.key,
     required this.profileImageUrl,
@@ -15,6 +11,10 @@ class ProfileBar extends StatelessWidget implements PreferredSizeWidget {
     required this.onlineStatus,
     required this.onPress,
   });
+  final String? profileImageUrl;
+  final String partnerName;
+  final String onlineStatus;
+  final VoidCallback onPress;
 
   @override
   Widget build(BuildContext context) {

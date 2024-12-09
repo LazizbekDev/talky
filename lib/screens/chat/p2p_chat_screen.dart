@@ -14,12 +14,6 @@ import 'package:talky/providers/chat_provider.dart';
 import 'package:intl/intl.dart';
 
 class P2PChatScreen extends StatefulWidget {
-  final String chatPartnerId;
-  final String chatPartnerName;
-  final String chatPartnerImage;
-  final String bio;
-  final String onlineStatus;
-
   const P2PChatScreen({
     super.key,
     required this.chatPartnerId,
@@ -28,6 +22,11 @@ class P2PChatScreen extends StatefulWidget {
     required this.bio,
     required this.onlineStatus,
   });
+  final String chatPartnerId;
+  final String chatPartnerName;
+  final String chatPartnerImage;
+  final String bio;
+  final String onlineStatus;
 
   @override
   State<P2PChatScreen> createState() => _P2PChatScreenState();
@@ -51,36 +50,42 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
       File imageFile = File(pickedFile.path);
       final chatProvider = Provider.of<ChatProvider>(context, listen: false);
 
-      String? imageUrl = await chatProvider.uploadImage(imageFile);
+      Uint8List imageBytes = await imageFile.readAsBytes();
+
+      String? imageUrl = await chatProvider.uploadImage(imageBytes);
 
       if (imageUrl != null && mounted) {
-        await chatProvider.sendMessage(imageUrl: imageUrl);
+        await chatProvider.sendMessage(
+          fileBytes: imageBytes,
+          fileName: imageUrl,
+          chatPartnerId: widget.chatPartnerId,
+        );
       }
     } else {
       debugPrint('No image selected');
     }
   }
 
-  Future<void> pickFile() async {
-    final result = await FilePicker.platform.pickFiles(withData: true);
+  Future<PlatformFile?> pickFile() async {
+    final result = await FilePicker.platform.pickFiles(
+      withData: true,
+    );
+    if (result != null && result.files.isNotEmpty) {
+      return result.files.first;
+    }
+    return null;
+  }
 
-    if (result != null && mounted) {
-      Uint8List? fileBytes = result.files.single.bytes;
-      String fileName = result.files.single.name;
-
-      if (fileBytes == null) {
-        File file = File(result.files.single.path!);
-        fileBytes = await file.readAsBytes();
+  String extractFileType(String fileUrl) {
+    try {
+      final uri = Uri.parse(fileUrl);
+      final path = uri.path;
+      if (path.contains('.png')) {
+        return 'image';
       }
-      if (!mounted) return;
-      final chatProvider = Provider.of<ChatProvider>(context, listen: false);
-      String? fileUrl = await chatProvider.uploadFile(fileBytes, fileName);
-
-      if (fileUrl != null && mounted) {
-        await chatProvider.sendMessage(fileUrl: fileUrl);
-      }
-    } else {
-      debugPrint('No file selected');
+      return 'file';
+    } catch (e) {
+      return 'file';
     }
   }
 
@@ -131,14 +136,17 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                       itemCount: messages.length,
                       itemBuilder: (context, index) {
                         final message = messages[index].data();
-                        final String imageUrl = message['imageUrl'] ?? '';
-                        final String fileUrl = message['fileUrl'] ?? '';
+                        final String fileUrl = message['fileUrl'] ?? "";
 
-                        List<String> imageUrls = [];
-                        if (imageUrl.isNotEmpty) {
-                          imageUrls.add(imageUrl);
-                          allImages.add(imageUrl);
+                        final bool isImage =
+                            extractFileType(fileUrl) == 'image';
+
+                        final List<String> imageUrls = isImage ? [fileUrl] : [];
+
+                        if (isImage) {
+                          allImages.add(fileUrl);
                         }
+
                         final isMe = message['senderId'] ==
                             FirebaseAuth.instance.currentUser!.uid;
                         final Timestamp? timestamp =
@@ -185,7 +193,7 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                                   message: message['message'] ?? '',
                                   timestamp: messageDate,
                                   imageUrls: imageUrls,
-                                  fileUrl: fileUrl,
+                                  fileUrl: isImage ? '' : fileUrl,
                                 ),
                               ),
                             ),
@@ -197,9 +205,26 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                 ),
               ),
               SendData(
-                sendToChat: ({String? text, String? imageUrl}) {
-                  Provider.of<ChatProvider>(context, listen: false)
-                      .sendMessage(text: text, imageUrl: imageUrl);
+                sendToChat: ({String? text, String? imageUrl}) async {
+                  if (text != null && text.isNotEmpty) {
+                    await Provider.of<ChatProvider>(context, listen: false)
+                        .sendMessage(
+                      text: text,
+                      chatPartnerId: widget.chatPartnerId,
+                    );
+                  }
+
+                  if (imageUrl != null) {
+                    final fileResult = await pickFile();
+                    if (fileResult != null && context.mounted) {
+                      await Provider.of<ChatProvider>(context, listen: false)
+                          .sendMessage(
+                        chatPartnerId: widget.chatPartnerId,
+                        fileBytes: fileResult.bytes,
+                        fileName: fileResult.name,
+                      );
+                    }
+                  }
                 },
                 chooseImage: pickImage,
                 chooseFile: pickFile,

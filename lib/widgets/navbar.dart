@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Navbar extends StatelessWidget {
+  const Navbar(
+      {super.key, required this.leftText, this.title = const SizedBox()});
   final Widget leftText;
   final Widget title;
-  const Navbar({super.key, required this.leftText, this.title = const SizedBox()});
 
   @override
   Widget build(BuildContext context) {

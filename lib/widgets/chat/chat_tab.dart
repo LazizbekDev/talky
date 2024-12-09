@@ -4,8 +4,8 @@ import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/chat/image_grid.dart';
 
 class ChatTab extends StatelessWidget {
-  final List<String> images;
   const ChatTab({super.key, required this.images});
+  final List<String> images;
 
   @override
   Widget build(BuildContext context) {

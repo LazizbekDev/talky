@@ -3,15 +3,6 @@ import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/utilities/status.dart';
 
 class Button extends StatelessWidget {
-  final VoidCallback onPressed;
-  final String text;
-  final String? imagePath;
-  final Color color;
-  final double padding;
-  final double borderRadius;
-  final double fontSize;
-  final Status status;
-
   const Button({
     super.key,
     required this.onPressed,
@@ -23,13 +14,19 @@ class Button extends StatelessWidget {
     this.fontSize = 16,
     this.status = Status.enabled,
   });
+  final VoidCallback onPressed;
+  final String text;
+  final String? imagePath;
+  final Color color;
+  final double padding;
+  final double borderRadius;
+  final double fontSize;
+  final Status status;
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      onPressed: status == Status.enabled
-          ? onPressed
-          : null,
+      onPressed: status == Status.enabled ? onPressed : null,
       color: color,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(borderRadius),

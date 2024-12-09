@@ -13,9 +13,9 @@ class UserProvider with ChangeNotifier {
     try {
       final currentUser = _auth.currentUser;
 
-      if (currentUser == null) {
-        debugPrint('User not signed in');
-        throw Exception("User not signed in");
+      if (currentUser == null || currentUser.uid.isEmpty) {
+        debugPrint('User not signed in or invalid UID');
+        throw Exception("User not signed in or invalid UID");
       }
 
       debugPrint('Fetching user profile for: ${currentUser.uid}');
@@ -33,18 +33,27 @@ class UserProvider with ChangeNotifier {
       final userProfile = results[0] as DocumentSnapshot;
       final usersSnapshot = results[1] as QuerySnapshot;
 
-      // debugPrint('User profile: ${userProfile.data()}');
-      // debugPrint('Fetched ${usersSnapshot.docs.length} users');
+      // Validate user profile data
+      final userProfileData = userProfile.data() as Map<String, dynamic>?;
+      if (userProfileData == null) {
+        throw Exception('No user profile found for ${currentUser.uid}');
+      }
+
+      // Validate all users data
+      final allUsersData = usersSnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+
+      debugPrint('User profile fetched: $userProfileData');
+      debugPrint('Fetched ${allUsersData.length} other users');
 
       return {
-        'userProfile': userProfile.data() as Map<String, dynamic>?,
-        'allUsers': usersSnapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
-            .toList(),
+        'userProfile': userProfileData,
+        'allUsers': allUsersData,
       };
     } catch (e) {
       debugPrint('Error while fetching user data: $e');
-      throw Exception('Failed to fetch data');
+      throw Exception('Failed to fetch user data');
     }
   }
 

@@ -3,9 +3,8 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 class ImageGrid extends StatelessWidget {
-  final List<String> imagePaths;
-
   const ImageGrid({super.key, required this.imagePaths});
+  final List<String> imagePaths;
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +61,7 @@ class ImageGrid extends StatelessWidget {
                 maxScale: PhotoViewComputedScale.covered * 2,
               );
             },
-            pageController: PageController(
-                initialPage: initialIndex),
+            pageController: PageController(initialPage: initialIndex),
             scrollPhysics: const BouncingScrollPhysics(),
             backgroundDecoration: const BoxDecoration(color: Colors.black),
           ),

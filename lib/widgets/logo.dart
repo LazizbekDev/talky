@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:talky/utilities/app_colors.dart';
 
 class Logo extends StatelessWidget {
-  final bool dark;
   const Logo({super.key, this.dark = false});
+  final bool dark;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class Logo extends StatelessWidget {
           style: GoogleFonts.inter(
             textStyle: TextStyle(
               fontSize: 80,
-              color:  dark ? AppColors.primaryColor : AppColors.textPrimary,
+              color: dark ? AppColors.primaryColor : AppColors.textPrimary,
             ),
           ),
         ),

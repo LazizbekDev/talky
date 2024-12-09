@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:talky/utilities/app_colors.dart';
 
 class Input extends StatelessWidget {
-  final TextEditingController controller;
-  final bool obscureText;
-  final String hintText;
-  final IconButton? suffixIcon;
-  final String? labelText;
-
   const Input({
     super.key,
     required this.controller,
@@ -16,6 +10,11 @@ class Input extends StatelessWidget {
     this.suffixIcon,
     this.labelText,
   });
+  final TextEditingController controller;
+  final bool obscureText;
+  final String hintText;
+  final IconButton? suffixIcon;
+  final String? labelText;
 
   @override
   Widget build(BuildContext context) {
