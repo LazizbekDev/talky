@@ -3,14 +3,14 @@ import 'package:talky/widgets/logo.dart';
 
 class LoginLayout extends StatelessWidget {
   const LoginLayout({
-    super.key,
     required this.caption,
     required this.email,
     required this.password,
-    this.forgotPassword = const SizedBox(),
-    this.agreement = const SizedBox(),
     required this.button,
     required this.suggestion,
+    this.forgotPassword = const SizedBox(),
+    this.agreement = const SizedBox(),
+    super.key,
   });
   final Widget caption;
   final Widget email;

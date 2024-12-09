@@ -27,12 +27,11 @@ class Verify extends StatelessWidget {
       );
     }
 
-    void signUp(pin, context) async {
+    void signUp(context) async {
       try {
         await authProvider.signUp(
           email: email ?? "",
           password: password ?? "",
-          otp: pin,
         );
         Navigator.pushReplacementNamed(context, RouteNames.profile);
       } catch (e) {
@@ -107,7 +106,7 @@ class Verify extends StatelessWidget {
                 otpPinFieldDecoration:
                     OtpPinFieldDecoration.defaultPinBoxDecoration,
                 onSubmit: (String pin) {
-                  signUp(pin, context);
+                  signUp(context);
                 },
                 onChange: (String text) {},
               ),

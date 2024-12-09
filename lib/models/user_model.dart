@@ -22,12 +22,12 @@ class UserModel {
       isOnline: data['isOnline'] ?? false,
     );
   }
-  String uid;
-  String nick;
-  String description;
-  String imageUrl;
-  DateTime lastSeen;
-  bool isOnline;
+  final String uid;
+  final String nick;
+  final String description;
+  final String imageUrl;
+  final DateTime lastSeen;
+  final bool isOnline;
 
   Map<String, dynamic> toMap() {
     return {

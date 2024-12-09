@@ -4,7 +4,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:talky/providers/auth_provider.dart' as sign_out;
 import 'package:provider/provider.dart';
 import 'package:talky/providers/chat_provider.dart';
-import 'package:talky/providers/users_provider.dart';
+import 'package:talky/providers/user_provider.dart';
 import 'package:talky/routes/route_names.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/utilities/lifecycle_observer.dart';
@@ -56,8 +56,8 @@ class Chat extends StatelessWidget {
                     return const Center(child: Text('No data found'));
                   }
 
-                  final userProfile = snapshot.data!['userProfile'];
-                  final allUsers = snapshot.data!['allUsers'];
+                  final userProfile = snapshot.data?['userProfile'];
+                  final allUsers = snapshot.data?['allUsers'];
 
                   if (allUsers.isEmpty) {
                     return const Center(child: Text('No users available'));
@@ -75,11 +75,13 @@ class Chat extends StatelessWidget {
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(
-                                context, RouteNames.profileDetail,
-                                arguments: {
-                                  'userId': userProfile['uid'],
-                                  'imageUrls': <String>[],
-                                });
+                              context,
+                              RouteNames.profileDetail,
+                              arguments: {
+                                'userId': userProfile['uid'],
+                                'imageUrls': <String>[],
+                              },
+                            );
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,9 +120,10 @@ class Chat extends StatelessWidget {
                               final chatPartnerId = user['uid'];
 
                               return StreamBuilder<String?>(
-                                stream: Provider.of<ChatProvider>(context,
-                                        listen: false)
-                                    .getLastMessage(chatPartnerId),
+                                stream: Provider.of<ChatProvider>(
+                                  context,
+                                  listen: false,
+                                ).getLastMessage(chatPartnerId),
                                 builder: (context, lastMessageSnapshot) {
                                   final lastMessage = lastMessageSnapshot.data;
 
@@ -134,7 +137,8 @@ class Chat extends StatelessWidget {
                                       }
                                       if (lastSeenSnapshot.hasError) {
                                         return const Text(
-                                            'Error loading status');
+                                          'Error loading status',
+                                        );
                                       }
 
                                       final lastSeenTime =

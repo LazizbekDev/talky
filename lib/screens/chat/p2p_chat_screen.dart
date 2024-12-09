@@ -99,10 +99,14 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
         partnerName: widget.chatPartnerName,
         onlineStatus: widget.onlineStatus,
         onPress: () {
-          Navigator.pushNamed(context, RouteNames.profileDetail, arguments: {
-            'userId': widget.chatPartnerId,
-            'imageUrls': allImages.cast<String>()
-          });
+          Navigator.pushNamed(
+            context,
+            RouteNames.profileDetail,
+            arguments: {
+              'userId': widget.chatPartnerId,
+              'imageUrls': allImages.cast<String>(),
+            },
+          );
         },
       ),
       body: SafeArea(
@@ -128,15 +132,15 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-                    final messages = snapshot.data!.docs;
+                    final messages = snapshot.data?.docs;
                     String? previousDate;
 
                     return ListView.builder(
                       reverse: true,
-                      itemCount: messages.length,
+                      itemCount: messages?.length,
                       itemBuilder: (context, index) {
-                        final message = messages[index].data();
-                        final String fileUrl = message['fileUrl'] ?? "";
+                        final message = messages?[index].data();
+                        final String fileUrl = message?['fileUrl'] ?? "";
 
                         final bool isImage =
                             extractFileType(fileUrl) == 'image';
@@ -147,10 +151,10 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                           allImages.add(fileUrl);
                         }
 
-                        final isMe = message['senderId'] ==
-                            FirebaseAuth.instance.currentUser!.uid;
+                        final isMe = message?['senderId'] ==
+                            FirebaseAuth.instance.currentUser?.uid;
                         final Timestamp? timestamp =
-                            message['timestamp'] as Timestamp?;
+                            message?['timestamp'] as Timestamp?;
 
                         DateTime messageDate = timestamp != null
                             ? timestamp.toDate()
@@ -190,7 +194,7 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: MessageBox(
                                   sender: isMe,
-                                  message: message['message'] ?? '',
+                                  message: message?['message'] ?? '',
                                   timestamp: messageDate,
                                   imageUrls: imageUrls,
                                   fileUrl: isImage ? '' : fileUrl,

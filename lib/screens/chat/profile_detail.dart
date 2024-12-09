@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/models/user_model.dart';
-import 'package:talky/providers/users_provider.dart';
+import 'package:talky/providers/user_provider.dart';
 import 'package:talky/providers/auth_provider.dart' as sign_out;
 import 'package:talky/routes/route_names.dart';
 import 'package:talky/utilities/app_colors.dart';

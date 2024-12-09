@@ -6,12 +6,6 @@ import 'package:talky/utilities/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MessageBox extends StatelessWidget {
-  final bool sender;
-  final String message;
-  final DateTime timestamp;
-  final List<String>? imageUrls;
-  final String fileUrl;
-
   const MessageBox({
     super.key,
     required this.sender,
@@ -20,6 +14,11 @@ class MessageBox extends StatelessWidget {
     this.imageUrls,
     required this.fileUrl,
   });
+  final bool sender;
+  final String message;
+  final DateTime timestamp;
+  final List<String>? imageUrls;
+  final String fileUrl;
 
   @override
   Widget build(BuildContext context) {

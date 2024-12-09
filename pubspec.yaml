@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: '>=3.4.4 <4.0.0'
+  sdk: '>=3.4.3 <4.0.0'
 
 dependencies:
   another_flutter_splash_screen: ^1.2.1
@@ -35,6 +35,13 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   lines_longer_than: ^1.0.3
   dart_code_metrics: 5.7.4
+
+dependency_overrides:
+  intl: 0.18.1
+  file: ^6.1.0
+  pub_updater: ^0.3.0
+  http: ^1.2.2
+  uuid: ^3.0.7
 
 flutter:
   uses-material-design: true

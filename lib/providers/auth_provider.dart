@@ -7,7 +7,10 @@ import 'package:talky/services/storage_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   AuthProvider(
-      this._authService, this._firestoreService, this._storageService) {
+    this._authService,
+    this._firestoreService,
+    this._storageService,
+  ) {
     _authService.authStateChanges.listen((User? user) {
       _user = user;
       notifyListeners();
@@ -50,7 +53,6 @@ class AuthProvider extends ChangeNotifier {
   Future<void> signUp({
     required String email,
     required String password,
-    required String otp,
   }) async {
     try {
       _user = await _authService.signUp(email, password);
@@ -64,12 +66,13 @@ class AuthProvider extends ChangeNotifier {
     setIsLoading(true);
     try {
       _user = await _authService.signInWithGoogle();
+      final uid = _user?.uid ?? '';
       if (_user != null) {
-        await _firestoreService.saveUserData(_user!.uid, {
+        await _firestoreService.saveUserData(uid, {
           'nick': _user?.displayName,
           'email': _user?.email,
           'image_url': _user?.photoURL,
-          'uid': _user?.uid,
+          'uid': uid,
         });
         notifyListeners();
       }
@@ -89,13 +92,14 @@ class AuthProvider extends ChangeNotifier {
     try {
       setIsUploading(true);
       Uint8List imageBytes = await selectedImage.readAsBytes();
+      final uid = _user?.uid ?? '';
       final imageUrl = await _storageService.uploadFile(
-        'user_images/${_user!.uid}.jpg',
+        'user_images/$uid.jpg',
         imageBytes,
       );
 
       await _firestoreService.uploadUserProfileImage(
-        uid: _user!.uid,
+        uid: uid,
         imageUrl: imageUrl,
         nick: nick,
         description: description,
