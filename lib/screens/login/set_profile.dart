@@ -22,21 +22,27 @@ class _SetProfileState extends State<SetProfile> {
   final nickNameController = TextEditingController();
   final bioController = TextEditingController();
   File? selectedImage;
+  final textStyle = GoogleFonts.inter(
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+    color: AppColors.primaryColor,
+  );
 
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<AuthProvider>(context, listen: true);
+    final currentImage = selectedImage;
 
     void complete(context) async {
-      if (selectedImage == null) {
+      if (currentImage == null) {
         debugPrint('No image selected');
       } else if (nickNameController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please enter your nickname.')),
         );
       } else {
-        debugPrint('Image selected: ${selectedImage!.path}');
-        File imageFile = File(selectedImage!.path);
+        debugPrint('Image selected: ${currentImage.path}');
+        File imageFile = File(currentImage.path);
         await userProvider.uploadUserInfoToFirestore(
           selectedImage: imageFile,
           nick: nickNameController.text,
@@ -63,18 +69,16 @@ class _SetProfileState extends State<SetProfile> {
               'assets/images/pop.png',
               width: 14,
             ),
-            onPressed: () {},
+            onPressed: () {
+              debugPrint("chat input setProfile");
+            },
           ),
         ),
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(
             'Back',
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: AppColors.primaryColor,
-            ),
+            style: textStyle,
           ),
           Expanded(
             child: Center(

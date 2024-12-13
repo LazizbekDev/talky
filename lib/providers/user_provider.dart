@@ -30,7 +30,7 @@ class UserProvider with ChangeNotifier {
 
       final results = await Future.wait([userProfileFuture, allUsersFuture]);
 
-      final userProfile = results[0] as DocumentSnapshot;
+      final userProfile = results.first as DocumentSnapshot;
       final usersSnapshot = results[1] as QuerySnapshot;
 
       // Validate user profile data
@@ -102,10 +102,11 @@ class UserProvider with ChangeNotifier {
 
   Future<DateTime?> fetchUserLastSeen(String userId) async {
     final userDoc = await _firestore.collection('users').doc(userId).get();
+    final userData = userDoc.data();
     if (userDoc.exists) {
-      final isOnline = userDoc.data()?['isOnline'] as bool? ?? false;
+      final isOnline = userData?['isOnline'] as bool? ?? false;
       if (isOnline) return null;
-      return (userDoc.data()?['lastSeen'] as Timestamp?)?.toDate();
+      return (userData?['lastSeen'] as Timestamp?)?.toDate();
     }
     return null;
   }

@@ -20,6 +20,6 @@ class FirestoreService {
       'image_url': imageUrl,
       'nick': nick,
       'description': description,
-    }, SetOptions(merge: true));
+    }, SetOptions(merge: true),);
   }
 }

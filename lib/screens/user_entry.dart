@@ -6,7 +6,7 @@ import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/routes/route_names.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/button.dart';
-import 'package:talky/widgets/divider.dart';
+import 'package:talky/widgets/divider_with_text.dart';
 import 'package:talky/widgets/logo.dart';
 import 'package:talky/widgets/login/suggest.dart';
 
@@ -54,7 +54,11 @@ class UserEntry extends StatelessWidget {
                 ),
                 const Spacer(),
                 Consumer<AuthProvider>(
-                  builder: (context, authProvider, child) {
+                  builder: (
+                    context,
+                    authProvider,
+                    child,
+                  ) {
                     return MaterialButton(
                       onPressed: () => signIn(authProvider),
                       color: AppColors.backgroundColor,
@@ -126,7 +130,7 @@ class UserEntry extends StatelessWidget {
                       arguments: false,
                     );
                   },
-                )
+                ),
               ],
             ),
           ),

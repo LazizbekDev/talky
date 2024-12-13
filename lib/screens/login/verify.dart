@@ -11,13 +11,18 @@ import 'package:talky/widgets/logo.dart';
 import 'package:talky/widgets/login/suggest.dart';
 
 class Verify extends StatelessWidget {
-  const Verify({super.key, this.email, this.password});
+  const Verify({
+    super.key,
+    this.email,
+    this.password,
+  });
   final String? email;
   final String? password;
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final textInter = GoogleFonts.inter();
 
     if (email == null || password == null) {
       return const Scaffold(
@@ -59,7 +64,7 @@ class Verify extends StatelessWidget {
         ),
         title: Text(
           'Back',
-          style: GoogleFonts.inter(
+          style: textInter.copyWith(
             fontSize: 16,
             fontWeight: FontWeight.w700,
             color: AppColors.primaryColor,
@@ -85,7 +90,7 @@ class Verify extends StatelessWidget {
               ),
               Text(
                 "Enter the 4 digit codes we send to you",
-                style: GoogleFonts.inter(
+                style: textInter.copyWith(
                   fontWeight: FontWeight.w600,
                   fontSize: 18,
                   color: AppColors.textPrimary,
@@ -108,11 +113,15 @@ class Verify extends StatelessWidget {
                 onSubmit: (String pin) {
                   signUp(context);
                 },
-                onChange: (String text) {},
+                onChange: (String text) {
+                  debugPrint("verify onChange");
+                },
               ),
               const Spacer(),
               Button(
-                onPressed: () {},
+                onPressed: () {
+                  debugPrint("Sign up button");
+                },
                 text: "Sign Up",
                 color: AppColors.primaryColor,
               ),

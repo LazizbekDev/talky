@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class ChatInputField extends StatefulWidget {
-  const ChatInputField({super.key, required this.sendMessage});
+class ChatInput extends StatefulWidget {
+  const ChatInput({super.key, required this.sendMessage});
   final Function() sendMessage;
 
   @override
-  State<ChatInputField> createState() => _ChatInputFieldState();
+  State<ChatInput> createState() => _ChatInputState();
 }
 
-class _ChatInputFieldState extends State<ChatInputField>
+class _ChatInputState extends State<ChatInput>
     with SingleTickerProviderStateMixin {
   bool isExpanded = false;
   late AnimationController _controller;
@@ -46,17 +46,23 @@ class _ChatInputFieldState extends State<ChatInputField>
             children: [
               FloatingActionButton(
                 mini: true,
-                onPressed: () {},
+                onPressed: () {
+                  debugPrint("chat input file");
+                },
                 child: const Icon(Icons.attach_file),
               ),
               FloatingActionButton(
                 mini: true,
-                onPressed: () {},
+                onPressed: () {
+                  debugPrint("chat input camera");
+                },
                 child: const Icon(Icons.camera_alt),
               ),
               FloatingActionButton(
                 mini: true,
-                onPressed: () {},
+                onPressed: () {
+                  debugPrint("chat input microphone");
+                },
                 child: const Icon(Icons.mic),
               ),
             ],

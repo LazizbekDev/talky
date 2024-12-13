@@ -11,7 +11,11 @@ import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/chat/chat_tab.dart';
 
 class ProfileDetail extends StatelessWidget {
-  const ProfileDetail({super.key, required this.userId, required this.images});
+  const ProfileDetail({
+    super.key,
+    required this.userId,
+    required this.images,
+  });
   final String userId;
   final List<String> images;
 
@@ -29,16 +33,22 @@ class ProfileDetail extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(title: const Text('Error')),
-            body: Center(child: Text('Error: ${snapshot.error} $userId')),
+            body: Center(
+              child: Text(
+                'Error: ${snapshot.error ?? "Unknown error"}\nUser ID: $userId',
+              ),
+            ),
           );
-        } else if (!snapshot.hasData || snapshot.data == null) {
+        }
+
+        final user = snapshot.data;
+        if (user == null) {
           return Scaffold(
             appBar: AppBar(title: const Text('Profile Not Found')),
             body: const Center(child: Text('User profile not found')),
           );
         }
 
-        final user = snapshot.data!;
         return _buildProfile(user, context);
       },
     );
@@ -56,6 +66,13 @@ class ProfileDetail extends StatelessWidget {
       Navigator.pushReplacementNamed(context, RouteNames.splash);
     }
 
+    final textStyle = GoogleFonts.inter(
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+    );
+
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -68,14 +85,12 @@ class ProfileDetail extends StatelessWidget {
         ),
         title: Text(
           'Back',
-          style: GoogleFonts.inter(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
+          style: textStyle.copyWith(
             color: AppColors.primaryColor,
           ),
         ),
         actions: [
-          userId == FirebaseAuth.instance.currentUser?.uid
+          userId == currentUserId
               ? PopupMenuButton<String>(
                   onSelected: (String value) {
                     debugPrint(value);
@@ -95,8 +110,7 @@ class ProfileDetail extends StatelessWidget {
                       const PopupMenuDivider(),
                       PopupMenuItem<String>(
                         value: 'logout',
-                        onTap: () => Navigator.pushReplacementNamed(
-                            context, RouteNames.splash),
+                        onTap: () => onLogOut(context),
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -128,8 +142,7 @@ class ProfileDetail extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 20, bottom: 10),
                     child: Text(
                       user.nick,
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w700,
+                      style: textStyle.copyWith(
                         fontSize: 18,
                         color: AppColors.textPrimary,
                       ),
@@ -139,7 +152,7 @@ class ProfileDetail extends StatelessWidget {
                     Text(
                       user.description,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: textStyle.copyWith(
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
                         color: AppColors.middleBlack,
@@ -151,13 +164,13 @@ class ProfileDetail extends StatelessWidget {
                         ? 'Online'
                         : 'Last seen: ${_formatLastSeen(user.lastSeen)}',
                     textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(fontSize: 10),
+                    style: textStyle.copyWith(fontSize: 10),
                   ),
-                  userId != FirebaseAuth.instance.currentUser?.uid
+                  userId != currentUserId
                       ? ChatTab(
                           images: images,
                         )
-                      : const SizedBox.shrink()
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),

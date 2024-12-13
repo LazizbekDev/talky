@@ -23,6 +23,12 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
     final TextEditingController groupController = TextEditingController();
+    final textStyle = GoogleFonts.inter();
+    final mainTextStyle = textStyle.copyWith(
+      color: AppColors.primaryColor,
+      fontWeight: FontWeight.w700,
+      fontSize: 16,
+    );
 
     return Scaffold(
       appBar: PreferredSize(
@@ -35,18 +41,14 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
               child: Center(
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.inter(
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                  ),
+                  style: mainTextStyle,
                 ),
               ),
             ),
             leadingWidth: 60,
             title: Text(
               title,
-              style: GoogleFonts.inter(
+              style: textStyle.copyWith(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.w700,
                 fontSize: 16,
@@ -55,14 +57,12 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
             actions: [
               complete
                   ? TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        debugPrint("Chat Model, saved");
+                      },
                       child: Text(
                         'Done',
-                        style: GoogleFonts.inter(
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                        ),
+                        style: mainTextStyle,
                       ),
                     )
                   : const SizedBox(),
@@ -72,7 +72,11 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 28, right: 28, top: 10),
+        padding: const EdgeInsets.only(
+          left: 28,
+          right: 28,
+          top: 10,
+        ),
         child: Column(
           children: [
             SizedBox(
@@ -81,7 +85,7 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
                 controller: controller,
                 decoration: InputDecoration(
                   hintText: 'Search',
-                  hintStyle: GoogleFonts.inter(
+                  hintStyle: textStyle.copyWith(
                     color: AppColors.lightGray,
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
@@ -137,7 +141,7 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   child: Text(
                     'Start a new group chat',
-                    style: GoogleFonts.inter(
+                    style: textStyle.copyWith(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                       color: AppColors.textPrimary,
@@ -166,7 +170,11 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
                   return const Center(child: Text('No data found'));
                 }
 
-                final allUsers = snapshot.data!['allUsers'];
+                final data = snapshot.data;
+                if (data == null || data['allUsers'] == null) {
+                  return const Center(child: Text('No data found'));
+                }
+                final allUsers = data['allUsers'];
 
                 if (allUsers.isEmpty) {
                   return const Center(child: Text('No users available'));

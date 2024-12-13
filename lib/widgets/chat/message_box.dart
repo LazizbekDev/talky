@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:talky/utilities/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 class MessageBox extends StatelessWidget {
   const MessageBox({
@@ -22,21 +21,25 @@ class MessageBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final urls = imageUrls;
     return Column(
       crossAxisAlignment:
           sender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        if (imageUrls != null && imageUrls!.isNotEmpty)
+        if (urls != null && urls.isNotEmpty)
           GestureDetector(
-            onTap: () => _showImage(context, imageUrls!,
-                title: DateFormat('hh:mm a').format(timestamp)),
+            onTap: () => _showImage(
+              context,
+              urls,
+              title: DateFormat('hh:mm a').format(timestamp),
+            ),
             child: Container(
               width: 125,
               height: 125,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 image: DecorationImage(
-                  image: NetworkImage(imageUrls![0]),
+                  image: NetworkImage(urls.first),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -62,24 +65,25 @@ class MessageBox extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: sender ? AppColors.primaryColor : AppColors.middleGray,
+                color: sender ? Colors.blueAccent : Colors.grey[400],
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(
-                    'assets/images/file.png',
-                    color: Colors.white,
-                    height: 14,
+                  Icon(
+                    Icons.file_present,
+                    color: sender ? Colors.white : Colors.black,
+                    size: 16,
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    Uri.parse(fileUrl).pathSegments.last.split('chatFiles/')[1],
-                    style: TextStyle(
-                      color: sender
-                          ? AppColors.backgroundColor
-                          : AppColors.textPrimary,
+                  Expanded(
+                    child: Text(
+                      Uri.parse(fileUrl).pathSegments.last,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: sender ? Colors.white : Colors.black,
+                      ),
                     ),
                   ),
                 ],
@@ -97,7 +101,11 @@ class MessageBox extends StatelessWidget {
     );
   }
 
-  void _showImage(BuildContext context, List<String> imageUrls, {title}) {
+  void _showImage(
+    BuildContext context,
+    List<String> imageUrls, {
+    String? title,
+  }) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -106,7 +114,7 @@ class MessageBox extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: Colors.black54,
             title: Text(
-              title,
+              title ?? '',
               style: const TextStyle(color: Colors.white),
             ),
             leading: IconButton(
@@ -135,8 +143,7 @@ class MessageBox extends StatelessWidget {
 
   Future<void> _openFile(String url) async {
     final Uri fileUri = Uri.parse(url);
-
-    if (await launchUrl(fileUri)) {
+    if (!await launchUrl(fileUri)) {
       debugPrint("Could not open the file.");
     }
   }

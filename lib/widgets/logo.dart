@@ -8,25 +8,20 @@ class Logo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final inter = GoogleFonts.inter(fontSize: 80);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           "Talky",
-          style: GoogleFonts.inter(
-            textStyle: TextStyle(
-              fontSize: 80,
+          style: inter.copyWith(
               color: dark ? AppColors.textPrimary : AppColors.backgroundColor,
-            ),
           ),
         ),
         Text(
           ".",
-          style: GoogleFonts.inter(
-            textStyle: TextStyle(
-              fontSize: 80,
+          style: inter.copyWith(
               color: dark ? AppColors.primaryColor : AppColors.textPrimary,
-            ),
           ),
         ),
       ],

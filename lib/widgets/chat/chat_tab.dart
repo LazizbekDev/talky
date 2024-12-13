@@ -9,6 +9,12 @@ class ChatTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = GoogleFonts.inter(
+      color: AppColors.lightGray,
+      fontWeight: FontWeight.w500,
+      fontSize: 14,
+    );
+
     return DefaultTabController(
       length: 2,
       child: Column(
@@ -30,11 +36,7 @@ class ChatTab extends StatelessWidget {
                 Center(
                   child: Text(
                     "No chat found!",
-                    style: GoogleFonts.inter(
-                      color: AppColors.lightGray,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                    ),
+                    style: textStyle,
                   ),
                 ),
                 if (images.isNotEmpty)
@@ -43,11 +45,7 @@ class ChatTab extends StatelessWidget {
                   Center(
                     child: Text(
                       "No Files found!",
-                      style: GoogleFonts.inter(
-                        color: AppColors.lightGray,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
-                      ),
+                      style: textStyle,
                     ),
                   ),
               ],

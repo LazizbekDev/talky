@@ -36,12 +36,13 @@ class App extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(
-            create: (_) => ChatProvider(
-                  ChatService(
-                    StorageService(),
-                  ),
-                  StorageService(),
-                ))
+          create: (_) => ChatProvider(
+            ChatService(
+              StorageService(),
+            ),
+            StorageService(),
+          ),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

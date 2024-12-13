@@ -58,16 +58,13 @@ class ChatService {
     }
 
     final currentUser = FirebaseAuth.instance.currentUser;
-
-    await _firestore
-        .collection('chatRooms')
-        .doc(chatRoomId)
-        .collection('messages')
-        .add({
-      'senderId': currentUser!.uid,
+    final currentRoom = _firestore.collection('chatRooms');
+    final serverTimeStamp = FieldValue.serverTimestamp();
+    await currentRoom.doc(chatRoomId).collection('messages').add({
+      'senderId': currentUser?.uid,
       'message': text ?? '',
       'fileUrl': fileUrl ?? '',
-      'timestamp': FieldValue.serverTimestamp(),
+      'timestamp': serverTimeStamp,
     });
 
     await _firestore.collection('chatRooms').doc(chatRoomId).update({
@@ -88,7 +85,9 @@ class ChatService {
   }
 
   Stream<String?> getLastMessageStream(
-      String chatRoomId, String chatPartnerId) {
+    String chatRoomId,
+    String chatPartnerId,
+  ) {
     if (chatRoomId.isEmpty || chatPartnerId.isEmpty) {
       debugPrint('Error: chatRoomId or chatPartnerId is empty');
       return Stream.value(null);

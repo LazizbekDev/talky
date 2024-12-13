@@ -20,8 +20,12 @@ class ImageGrid extends StatelessWidget {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: GestureDetector(
-            onTap: () => _showImage(context, imagePaths,
-                initialIndex: index, title: 'Image ${index + 1}'),
+            onTap: () => _showImage(
+              context,
+              imagePaths,
+              initialIndex: index,
+              title: 'Image ${index + 1}',
+            ),
             child: Image.network(
               imagePaths[index],
               fit: BoxFit.cover,
@@ -32,8 +36,12 @@ class ImageGrid extends StatelessWidget {
     );
   }
 
-  void _showImage(BuildContext context, List<String> imageUrls,
-      {int initialIndex = 0, String? title}) {
+  void _showImage(
+    BuildContext context,
+    List<String> imageUrls, {
+    int initialIndex = 0,
+    String? title,
+  }) {
     Navigator.push(
       context,
       MaterialPageRoute(

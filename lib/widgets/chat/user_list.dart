@@ -26,6 +26,7 @@ class UserList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final inter = GoogleFonts.inter();
     return ListTile(
       contentPadding: const EdgeInsets.all(0),
       leading: Stack(
@@ -61,7 +62,7 @@ class UserList extends StatelessWidget {
         children: [
           Text(
             userName,
-            style: GoogleFonts.inter(
+            style: inter.copyWith(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.textPrimary,
@@ -69,7 +70,7 @@ class UserList extends StatelessWidget {
           ),
           Text(
             lastSeenTime,
-            style: GoogleFonts.inter(
+            style: inter.copyWith(
               color: const Color(0xFF58616A),
               fontSize: 12,
             ),
@@ -81,7 +82,7 @@ class UserList extends StatelessWidget {
         children: [
           Text(
             lastMessage ?? "No messages yet",
-            style: GoogleFonts.inter(
+            style: inter.copyWith(
               color: const Color(0xFF58616A),
               fontSize: 14,
             ),

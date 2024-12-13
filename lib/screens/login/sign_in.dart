@@ -46,6 +46,7 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final textInter = GoogleFonts.inter();
 
     void signIn() async {
       final localContext = context;
@@ -98,7 +99,7 @@ class _SignInState extends State<SignIn> {
         ),
         title: Text(
           'Back',
-          style: GoogleFonts.inter(
+          style: textInter.copyWith(
             fontSize: 16,
             fontWeight: FontWeight.w700,
             color: AppColors.primaryColor,
@@ -110,7 +111,7 @@ class _SignInState extends State<SignIn> {
           padding: const EdgeInsets.symmetric(vertical: 40),
           child: Text(
             "Sign ${widget.signIn ? "in" : "up"} with mail",
-            style: GoogleFonts.inter(
+            style: textInter.copyWith(
               fontWeight: FontWeight.w600,
               fontSize: 18,
               color: AppColors.textPrimary,
@@ -139,7 +140,9 @@ class _SignInState extends State<SignIn> {
         ),
         forgotPassword: widget.signIn
             ? ForgotPassword(
-                onPressed: () {},
+                onPressed: () {
+                  debugPrint("Forgotten password");
+                },
               )
             : Agreement(
                 isChecked: termAndConditions,
@@ -155,7 +158,7 @@ class _SignInState extends State<SignIn> {
                 },
               ),
         button: Button(
-          onPressed: () async {
+          onPressed: () {
             widget.signIn ? signIn() : verify();
           },
           text: widget.signIn ? 'Sign in' : 'Sign up',

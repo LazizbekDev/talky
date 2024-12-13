@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Navbar extends StatelessWidget {
-  const Navbar(
-      {super.key, required this.leftText, this.title = const SizedBox()});
+  const Navbar({
+    super.key,
+    required this.leftText,
+    this.title = const SizedBox(),
+  });
   final Widget leftText;
   final Widget title;
 
@@ -21,7 +24,9 @@ class Navbar extends StatelessWidget {
             'assets/images/pop.png',
             width: 14,
           ),
-          onPressed: () {},
+          onPressed: () {
+                  debugPrint("go back, navbar");
+          },
         ),
       ),
       title: Row(

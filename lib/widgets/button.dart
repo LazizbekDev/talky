@@ -25,6 +25,7 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final paths = imagePath;
     return MaterialButton(
       onPressed: status == Status.enabled ? onPressed : null,
       color: color,
@@ -49,9 +50,9 @@ class Button extends StatelessWidget {
               ),
             ),
           ] else ...[
-            if (imagePath != null) ...[
+            if (paths != null) ...[
               Image.asset(
-                imagePath!,
+                paths,
                 height: 24,
               ),
               const SizedBox(width: 25),

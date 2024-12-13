@@ -34,6 +34,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
 
   @override
   Widget build(BuildContext context) {
+    final pickedFile = _pickedImageFile;
     return GestureDetector(
       onTap: _pickImage,
       child: Stack(
@@ -42,7 +43,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
             radius: 130,
             backgroundColor: AppColors.middleGray,
             foregroundImage:
-                _pickedImageFile != null ? FileImage(_pickedImageFile!) : null,
+                pickedFile != null ? FileImage(pickedFile) : null,
             child: Icon(
               Icons.person,
               size: 50,

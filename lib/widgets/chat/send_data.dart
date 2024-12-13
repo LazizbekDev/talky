@@ -107,7 +107,7 @@ class SendData extends StatelessWidget {
                 onTap: chooseFile,
               ),
             ],
-          )
+          ),
         ],
       ),
     );

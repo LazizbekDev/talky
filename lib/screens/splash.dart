@@ -13,29 +13,25 @@ class Splash extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterSplashScreen.fadeIn(
       duration: const Duration(milliseconds: 3000),
-      nextScreen: _nextScreen(),
+      nextScreen: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              backgroundColor: AppColors.primaryColor,
+              body: Center(
+                child: Logo(dark: false),
+              ),
+            );
+          }
+
+          return snapshot.hasData ? const Chat() : const UserEntry();
+        },
+      ),
       backgroundColor: AppColors.primaryColor,
       childWidget: const Center(
         child: Logo(dark: false),
       ),
-    );
-  }
-
-  Widget _nextScreen() {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            backgroundColor: AppColors.primaryColor,
-            body: Center(
-              child: Logo(dark: false),
-            ),
-          );
-        }
-
-        return snapshot.hasData ? const Chat() : const UserEntry();
-      },
     );
   }
 }

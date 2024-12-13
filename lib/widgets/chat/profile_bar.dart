@@ -11,6 +11,7 @@ class ProfileBar extends StatelessWidget implements PreferredSizeWidget {
     required this.onlineStatus,
     required this.onPress,
   });
+
   final String? profileImageUrl;
   final String partnerName;
   final String onlineStatus;
@@ -18,6 +19,13 @@ class ProfileBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final titleTextStyle = GoogleFonts.inter(
+      fontSize: 16,
+      fontWeight: FontWeight.w700,
+    );
+
+    final imageUrl = profileImageUrl;
+
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -45,13 +53,11 @@ class ProfileBar extends StatelessWidget implements PreferredSizeWidget {
             Expanded(
               child: Text(
                 'Back',
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
+                style: titleTextStyle.copyWith(
                   color: AppColors.primaryColor,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -62,16 +68,15 @@ class ProfileBar extends StatelessWidget implements PreferredSizeWidget {
           title: Text(
             partnerName,
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
+            style: titleTextStyle.copyWith(
               color: AppColors.textPrimary,
             ),
           ),
           subtitle: Text(
             onlineStatus,
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
+            style: titleTextStyle.copyWith(
+              color: AppColors.primaryColor,
               fontSize: 10,
             ),
           ),
@@ -83,8 +88,8 @@ class ProfileBar extends StatelessWidget implements PreferredSizeWidget {
           child: CircleAvatar(
             radius: 22,
             backgroundColor: const Color(0xFFF0F0F0),
-            backgroundImage: profileImageUrl != null
-                ? CachedNetworkImageProvider(profileImageUrl!)
+            backgroundImage: imageUrl != null
+                ? CachedNetworkImageProvider(imageUrl)
                 : null,
             child: profileImageUrl == null ? const Icon(Icons.person) : null,
           ),

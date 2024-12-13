@@ -19,9 +19,10 @@ ThemeData appTheme() {
     ),
     textTheme: const TextTheme(
       displayLarge: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: AppColors.primaryColor),
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        color: AppColors.primaryColor,
+      ),
       bodyLarge: TextStyle(fontSize: 16, color: Colors.black),
       labelLarge: TextStyle(color: Colors.white),
     ),
