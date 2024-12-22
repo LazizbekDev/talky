@@ -1,0 +1,10 @@
+{
+    "googleSignIn": "Google orqali kirish",
+    "withEmail": "Email bilan davom etish",
+    "signInError": "Kirishda xatolik bo'ldi! Iltimos keyinroq qaytadan xarakat qiling",
+    "or": "YOKI",
+    "signUpSuggest": "Accountingiz yo'qmi?",
+    "signInSuggest": "Allaqchon accountingiz mavjudmi?",
+    "showSignUp": "Yangi account yarating",
+    "showSignIn": "Accountingizga kiring"
+}

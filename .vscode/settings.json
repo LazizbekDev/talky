@@ -4,6 +4,7 @@
         "cyclomatic",
         "Firestore",
         "googleusercontent",
+        "kirish",
         "mobilesdk",
         "notlazy",
         "vsync",

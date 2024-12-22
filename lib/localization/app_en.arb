@@ -1,0 +1,10 @@
+{
+    "googleSignIn": "Sign in with Google",
+    "withEmail": "Continue with Email",
+    "signInError": "Sign-in failed. Please try again.",
+    "or": "OR",
+    "signUpSuggest": "Don't you have an account",
+    "signInSuggest": "Already have an account?",
+    "showSignUp": "Sign up here",
+    "showSignIn": "Sign in here"
+}

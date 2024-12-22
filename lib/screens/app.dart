@@ -1,6 +1,7 @@
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:talky/localization/generated/localizations.dart';
 import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/providers/chat_provider.dart';
 import 'package:talky/providers/user_provider.dart';
@@ -48,7 +49,10 @@ class App extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'TALKY',
         theme: appTheme(),
+        localizationsDelegates: L10n.localizationsDelegates,
+        supportedLocales: L10n.supportedLocales,
         initialRoute: RouteNames.splash,
+        locale: const Locale('uz'),
         onGenerateRoute: generateRoute,
       ),
     );

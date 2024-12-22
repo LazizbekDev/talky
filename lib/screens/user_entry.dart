@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:talky/localization/localization.dart';
 import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/routes/route_names.dart';
 import 'package:talky/utilities/app_colors.dart';
@@ -15,6 +16,7 @@ class UserEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.locale;
     void signIn(authProvider) async {
       try {
         await authProvider.signInWithGoogle();
@@ -32,8 +34,8 @@ class UserEntry extends StatelessWidget {
 
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Sign-in failed. Please try again.'),
+            SnackBar(
+              content: Text(locale.signInError),
             ),
           );
         }
@@ -86,9 +88,9 @@ class UserEntry extends StatelessWidget {
                               height: 24,
                             ),
                             const SizedBox(width: 25),
-                            const Text(
-                              'Sign in with Google',
-                              style: TextStyle(
+                            Text(
+                              locale.googleSignIn,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 color: AppColors.textPrimary,
                               ),
@@ -102,7 +104,9 @@ class UserEntry extends StatelessWidget {
                 const SizedBox(
                   height: 38,
                 ),
-                const DividerWithText(),
+                DividerWithText(
+                  text: locale.or,
+                ),
                 const SizedBox(
                   height: 38,
                 ),
@@ -114,7 +118,7 @@ class UserEntry extends StatelessWidget {
                       arguments: true,
                     );
                   },
-                  text: 'Continue with Email',
+                  text: locale.withEmail,
                   imagePath: 'assets/images/lets-icons_e-mail.png',
                   color: AppColors.backgroundColor,
                 ),
