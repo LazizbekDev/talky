@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:otp_pin_field/otp_pin_field.dart';
 import 'package:provider/provider.dart';
+import 'package:talky/localization/localization.dart';
 import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/routes/route_names.dart';
 import 'package:talky/screens/login/sign_in.dart';
@@ -23,6 +24,7 @@ class Verify extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final textInter = GoogleFonts.inter();
+    final locale = context.locale;
 
     if (email == null || password == null) {
       return const Scaffold(
@@ -63,7 +65,7 @@ class Verify extends StatelessWidget {
           },
         ),
         title: Text(
-          'Back',
+          locale.back,
           style: textInter.copyWith(
             fontSize: 16,
             fontWeight: FontWeight.w700,
@@ -89,7 +91,7 @@ class Verify extends StatelessWidget {
                 height: 40,
               ),
               Text(
-                "Enter the 4 digit codes we send to you",
+                locale.enterOTP,
                 style: textInter.copyWith(
                   fontWeight: FontWeight.w600,
                   fontSize: 18,
@@ -122,7 +124,7 @@ class Verify extends StatelessWidget {
                 onPressed: () {
                   debugPrint("Sign up button");
                 },
-                text: "Sign Up",
+                text: locale.signUp,
                 color: AppColors.primaryColor,
               ),
               const SizedBox(

@@ -16,6 +16,12 @@ class ChatProvider with ChangeNotifier {
   List<Map<String, dynamic>> get messages => _messages;
 
   String chatRoomId = '';
+  Future<void> ensureChatRoomId(String chatPartnerId) async {
+    if (chatRoomId.isEmpty) {
+      debugPrint('chatRoomId is empty. Initializing...');
+      await initializeChatRoom(chatPartnerId);
+    }
+  }
 
   Future<void> initializeChatRoom(String chatPartnerId) async {
     if (chatPartnerId.isEmpty) {
@@ -23,9 +29,9 @@ class ChatProvider with ChangeNotifier {
       return;
     }
     _messages = [];
+    notifyListeners();
     chatRoomId = await _chatService.initializeChatRoom(chatPartnerId);
     debugPrint('ChatRoom ID initialized: $chatRoomId');
-    notifyListeners();
   }
 
   Future<void> sendMessage({
@@ -34,16 +40,14 @@ class ChatProvider with ChangeNotifier {
     Uint8List? fileBytes,
     String? fileName,
   }) async {
-    if (chatRoomId.isEmpty) {
-      await initializeChatRoom(chatPartnerId);
-    }
+    await ensureChatRoomId(chatPartnerId);
+
     await _chatService.sendMessage(
       chatRoomId: chatRoomId,
       text: text,
       fileBytes: fileBytes,
       fileName: fileName,
     );
-    notifyListeners();
   }
 
   Future<String?> uploadImage(Uint8List imageBytes) async {
@@ -79,11 +83,9 @@ class ChatProvider with ChangeNotifier {
     }
   }
 
-  Stream<String?> getLastMessage(String chatPartnerId) {
-    if (chatRoomId.isEmpty) {
-      debugPrint('Warning: chatRoomId is empty, attempting to initialize.');
-      initializeChatRoom(chatPartnerId);
-    }
-    return _chatService.getLastMessageStream(chatRoomId, chatPartnerId);
+  Stream<String?> getLastMessage(String chatPartnerId) async* {
+    await ensureChatRoomId(chatPartnerId);
+
+    yield* _chatService.getLastMessageStream(chatRoomId);
   }
 }

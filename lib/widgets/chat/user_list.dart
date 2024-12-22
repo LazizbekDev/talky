@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:talky/localization/localization.dart';
 import 'package:talky/screens/chat/p2p_chat_screen.dart';
 import 'package:talky/utilities/app_colors.dart';
 
@@ -27,6 +28,7 @@ class UserList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final inter = GoogleFonts.inter();
+    final locale = context.locale;
     return ListTile(
       contentPadding: const EdgeInsets.all(0),
       leading: Stack(
@@ -81,7 +83,7 @@ class UserList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            lastMessage ?? "No messages yet",
+            lastMessage ?? locale.noMessage,
             style: inter.copyWith(
               color: const Color(0xFF58616A),
               fontSize: 14,

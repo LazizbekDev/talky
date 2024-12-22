@@ -4,6 +4,7 @@ import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:talky/localization/localization.dart';
 import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/layouts/login_layout.dart';
 import 'package:talky/routes/route_names.dart';
@@ -47,6 +48,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final textInter = GoogleFonts.inter();
+    final locale = context.locale;
 
     void signIn() async {
       final localContext = context;
@@ -98,7 +100,7 @@ class _SignInState extends State<SignIn> {
           },
         ),
         title: Text(
-          'Back',
+          locale.back,
           style: textInter.copyWith(
             fontSize: 16,
             fontWeight: FontWeight.w700,
@@ -110,7 +112,7 @@ class _SignInState extends State<SignIn> {
         caption: Padding(
           padding: const EdgeInsets.symmetric(vertical: 40),
           child: Text(
-            "Sign ${widget.signIn ? "in" : "up"} with mail",
+            "${widget.signIn ? locale.signIn : locale.signUp} ${locale.withEmail}",
             style: textInter.copyWith(
               fontWeight: FontWeight.w600,
               fontSize: 18,
@@ -161,7 +163,7 @@ class _SignInState extends State<SignIn> {
           onPressed: () {
             widget.signIn ? signIn() : verify();
           },
-          text: widget.signIn ? 'Sign in' : 'Sign up',
+          text: widget.signIn ? locale.signIn : locale.signUp,
           color: AppColors.primaryColor,
           status: (!widget.signIn && termAndConditions)
               ? Status.enabled

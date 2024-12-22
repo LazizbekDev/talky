@@ -10,6 +10,7 @@ import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/utilities/lifecycle_observer.dart';
 import 'package:talky/widgets/chat/chat_modal.dart';
 import 'package:talky/widgets/chat/user_list.dart';
+import 'package:talky/localization/localization.dart';
 
 class Chat extends StatelessWidget {
   const Chat({super.key});
@@ -17,7 +18,7 @@ class Chat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController contactController = TextEditingController();
-
+    final locale = context.locale;
     final userProvider = Provider.of<UserProvider>(context);
     WidgetsBinding.instance.addObserver(LifecycleObserver(userProvider));
     userProvider.updateLastSeenStatus(true);
@@ -49,18 +50,18 @@ class Chat extends StatelessWidget {
                   }
 
                   if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
+                    return Center(child: Text('${locale.chatError} ${snapshot.error}'));
                   }
 
                   if (!snapshot.hasData || snapshot.data == null) {
-                    return const Center(child: Text('No data found'));
+                    return Center(child: Text(locale.noData));
                   }
 
                   final userProfile = snapshot.data?['userProfile'];
                   final allUsers = snapshot.data?['allUsers'];
 
                   if (allUsers.isEmpty) {
-                    return const Center(child: Text('No users available'));
+                    return Center(child: Text(locale.noUsers));
                   }
 
                   if (userProfile == null) {

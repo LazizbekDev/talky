@@ -8,9 +8,9 @@ class ChatService {
   ChatService(this._storageService);
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final StorageService _storageService;
+  final FieldValue _fieldValue = FieldValue.serverTimestamp();
 
   Future<String> initializeChatRoom(String chatPartnerId) async {
-    debugPrint('Initializing chat room for partner ID: $chatPartnerId');
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
     if (currentUserId == null) {
@@ -22,20 +22,22 @@ class ChatService {
         ? '${chatPartnerId}_$currentUserId'
         : '${currentUserId}_$chatPartnerId';
 
-    debugPrint('Generated ChatRoom ID: $chatRoomId');
-
     final chatRoomRef = _firestore.collection('chatRooms').doc(chatRoomId);
     final chatRoomSnapshot = await chatRoomRef.get();
 
     if (!chatRoomSnapshot.exists) {
-      debugPrint('Chat room does not exist. Creating new chat room.');
       await chatRoomRef.set({
         'users': [currentUserId, chatPartnerId],
         'lastMessage': '',
-        'lastUpdated': FieldValue.serverTimestamp(),
+        'lastUpdated': _fieldValue,
       });
-    } else {
-      debugPrint('Chat room already exists.');
+
+      await chatRoomRef.collection('messages').doc('init').set({
+        'senderId': 'system',
+        'message': 'Chat initialized',
+        'fileUrl': '',
+        'timestamp': _fieldValue,
+      });
     }
 
     return chatRoomId;
@@ -84,33 +86,22 @@ class ChatService {
     return messagesSnapshot.docs.map((doc) => doc.data()).toList();
   }
 
-  Stream<String?> getLastMessageStream(
-    String chatRoomId,
-    String chatPartnerId,
-  ) {
-    if (chatRoomId.isEmpty || chatPartnerId.isEmpty) {
-      debugPrint('Error: chatRoomId or chatPartnerId is empty');
+  Stream<String?> getLastMessageStream(String chatRoomId) {
+    if (chatRoomId.isEmpty) {
+      debugPrint('Error: chatRoomId is empty');
       return Stream.value(null);
     }
 
     return FirebaseFirestore.instance
         .collection('chatRooms')
         .doc(chatRoomId)
-        .collection('messages')
-        .orderBy('timestamp', descending: true)
-        .limit(1)
         .snapshots()
         .map((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        final message = snapshot.docs.first.data();
-        if (message.containsKey('text')) {
-          return message['text'] as String?;
-        } else {
-          debugPrint('Warning: "text" field not found in message document');
-          return null;
-        }
+      if (snapshot.exists) {
+        final data = snapshot.data();
+        return data?['lastMessage'] as String?;
       }
-      debugPrint('No messages found in chatRoomId: $chatRoomId');
+      debugPrint('Chat room document does not exist: $chatRoomId');
       return null;
     });
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:talky/localization/localization.dart';
 
 class Agreement extends StatelessWidget {
   const Agreement({
@@ -13,6 +14,7 @@ class Agreement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.locale;
     return Row(
       children: [
         Checkbox(
@@ -21,17 +23,17 @@ class Agreement extends StatelessWidget {
         ),
         GestureDetector(
           onTap: onTermsPressed,
-          child: const Text.rich(
+          child: Text.rich(
             TextSpan(
-              text: 'I agree to the ',
-              children: [
-                TextSpan(
-                  text: 'terms & conditions',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ],
+              text: locale.agreeText(locale.terms),
+              // children: [
+              //   TextSpan(
+              //     text: locale.terms,
+              //     style: const TextStyle(
+              //       decoration: TextDecoration.underline,
+              //     ),
+              //   ),
+              // ],
             ),
           ),
         ),

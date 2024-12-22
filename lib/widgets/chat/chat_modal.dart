@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:talky/localization/localization.dart';
 import 'package:talky/providers/chat_provider.dart';
 import 'package:talky/providers/user_provider.dart';
 import 'package:talky/utilities/app_colors.dart';
@@ -21,6 +22,7 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.locale;
     final userProvider = Provider.of<UserProvider>(context);
     final TextEditingController groupController = TextEditingController();
     final textStyle = GoogleFonts.inter();
@@ -40,7 +42,7 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
               onTap: () => Navigator.of(context).pop(),
               child: Center(
                 child: Text(
-                  'Cancel',
+                  locale.cancel,
                   style: mainTextStyle,
                 ),
               ),
@@ -61,7 +63,7 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
                         debugPrint("Chat Model, saved");
                       },
                       child: Text(
-                        'Done',
+                        locale.done,
                         style: mainTextStyle,
                       ),
                     )
@@ -84,7 +86,7 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
               child: TextField(
                 controller: controller,
                 decoration: InputDecoration(
-                  hintText: 'Search',
+                  hintText: locale.search,
                   hintStyle: textStyle.copyWith(
                     color: AppColors.lightGray,
                     fontWeight: FontWeight.w500,
@@ -134,13 +136,13 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
                     topRadius: const Radius.circular(10),
                     context: context,
                     builder: (context) => ChatModal(
-                      title: 'Group',
+                      title: locale.group,
                       complete: true,
                       controller: groupController,
                     ),
                   ),
                   child: Text(
-                    'Start a new group chat',
+                    locale.createGroup,
                     style: textStyle.copyWith(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
@@ -163,21 +165,22 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
                 }
 
                 if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return Center(
+                      child: Text('${locale.chatError} ${snapshot.error}'));
                 }
 
                 if (!snapshot.hasData || snapshot.data == null) {
-                  return const Center(child: Text('No data found'));
+                  return Center(child: Text(locale.noData));
                 }
 
                 final data = snapshot.data;
                 if (data == null || data['allUsers'] == null) {
-                  return const Center(child: Text('No data found'));
+                  return Center(child: Text(locale.noData));
                 }
                 final allUsers = data['allUsers'];
 
                 if (allUsers.isEmpty) {
-                  return const Center(child: Text('No users available'));
+                  return Center(child: Text(locale.noUsers));
                 }
                 return Expanded(
                   child: ListView.builder(
@@ -204,7 +207,7 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
                                 );
                               }
                               if (lastSeenSnapshot.hasError) {
-                                return const Text('Error loading status');
+                                return Text(locale.errorLoadingStatus);
                               }
 
                               final lastSeenTime = lastSeenSnapshot.data;

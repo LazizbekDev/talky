@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:talky/localization/localization.dart';
 import 'package:talky/models/user_model.dart';
 import 'package:talky/providers/user_provider.dart';
 import 'package:talky/providers/auth_provider.dart' as sign_out;
@@ -22,7 +23,7 @@ class ProfileDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-
+    final locale = context.locale;
     return FutureBuilder<UserModel?>(
       future: userProvider.fetchUserDetail(userId: userId),
       builder: (context, snapshot) {
@@ -32,7 +33,7 @@ class ProfileDetail extends StatelessWidget {
           );
         } else if (snapshot.hasError) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Error')),
+            appBar: AppBar(title: Text(locale.chatError)),
             body: Center(
               child: Text(
                 'Error: ${snapshot.error ?? "Unknown error"}\nUser ID: $userId',
@@ -44,8 +45,8 @@ class ProfileDetail extends StatelessWidget {
         final user = snapshot.data;
         if (user == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Profile Not Found')),
-            body: const Center(child: Text('User profile not found')),
+            appBar: AppBar(title: Text(locale.profileNotFound)),
+            body: Center(child: Text(locale.userProfileNotFound)),
           );
         }
 
@@ -56,6 +57,7 @@ class ProfileDetail extends StatelessWidget {
 
   Widget _buildProfile(UserModel user, BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
+    final locale = context.locale;
 
     Future<void> onLogOut(BuildContext context) async {
       await userProvider.updateLastSeenStatus(false);
@@ -84,7 +86,7 @@ class ProfileDetail extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Back',
+          locale.back,
           style: textStyle.copyWith(
             color: AppColors.primaryColor,
           ),
@@ -97,13 +99,13 @@ class ProfileDetail extends StatelessWidget {
                   },
                   itemBuilder: (BuildContext context) {
                     return [
-                      const PopupMenuItem<String>(
+                      PopupMenuItem<String>(
                         value: 'Option 1',
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Edit profile'),
-                            Icon(Icons.edit),
+                            Text(locale.editProfile),
+                            const Icon(Icons.edit),
                           ],
                         ),
                       ),
@@ -111,11 +113,11 @@ class ProfileDetail extends StatelessWidget {
                       PopupMenuItem<String>(
                         value: 'logout',
                         onTap: () => onLogOut(context),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Log out'),
-                            Icon(Icons.logout),
+                            Text(locale.logOut),
+                            const Icon(Icons.logout),
                           ],
                         ),
                       ),
@@ -161,8 +163,8 @@ class ProfileDetail extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     user.isOnline
-                        ? 'Online'
-                        : 'Last seen: ${_formatLastSeen(user.lastSeen)}',
+                        ? locale.online
+                        : '${locale.lastSeen} ${_formatLastSeen(user.lastSeen)}',
                     textAlign: TextAlign.center,
                     style: textStyle.copyWith(fontSize: 10),
                   ),

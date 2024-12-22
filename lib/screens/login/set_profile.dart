@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:talky/localization/localization.dart';
 import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/routes/route_names.dart';
 import 'package:talky/utilities/app_colors.dart';
@@ -32,13 +33,14 @@ class _SetProfileState extends State<SetProfile> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<AuthProvider>(context, listen: true);
     final currentImage = selectedImage;
+    final locale = context.locale;
 
     void complete(context) async {
       if (currentImage == null) {
         debugPrint('No image selected');
       } else if (nickNameController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter your nickname.')),
+          SnackBar(content: Text(locale.addNickWarning)),
         );
       } else {
         debugPrint('Image selected: ${currentImage.path}');
@@ -77,7 +79,7 @@ class _SetProfileState extends State<SetProfile> {
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(
-            'Back',
+            locale.back,
             style: textStyle,
           ),
           Expanded(
@@ -123,20 +125,20 @@ class _SetProfileState extends State<SetProfile> {
                       Input(
                         obscureText: false,
                         controller: nickNameController,
-                        hintText: 'Enter your name or nick',
+                        hintText: locale.addNick,
                       ),
                       const SizedBox(height: 18),
                       Input(
                         obscureText: false,
                         controller: bioController,
-                        hintText: 'Enter a bio',
+                        hintText: locale.addBio,
                       ),
                       const Spacer(),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Button(
                           onPressed: () => complete(context),
-                          text: "Complete",
+                          text: locale.complete,
                           status: userProvider.isUploading
                               ? Status.loading
                               : Status.enabled,
