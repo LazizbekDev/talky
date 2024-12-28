@@ -166,7 +166,8 @@ class ChatModal extends StatelessWidget implements PreferredSizeWidget {
 
                 if (snapshot.hasError) {
                   return Center(
-                      child: Text('${locale.chatError} ${snapshot.error}'));
+                    child: Text('${locale.chatError} ${snapshot.error}'),
+                  );
                 }
 
                 if (!snapshot.hasData || snapshot.data == null) {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/localization/localization.dart';
 import 'package:talky/providers/auth_provider.dart';
+import 'package:talky/providers/localization_provider.dart';
 import 'package:talky/routes/route_names.dart';
 import 'package:talky/utilities/app_colors.dart';
 import 'package:talky/widgets/button.dart';
@@ -17,6 +18,7 @@ class UserEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = context.locale;
+    final localizationProvider = Provider.of<LocalizationProvider>(context);
     void signIn(authProvider) async {
       try {
         await authProvider.signInWithGoogle();
@@ -121,6 +123,23 @@ class UserEntry extends StatelessWidget {
                   text: locale.withEmail,
                   imagePath: 'assets/images/lets-icons_e-mail.png',
                   color: AppColors.backgroundColor,
+                ),
+                const SizedBox(
+                  height: 38,
+                ),
+                DropdownButton<String>(
+                  value: localizationProvider.locale.languageCode,
+                  icon: const Icon(Icons.language),
+                  items: const [
+                    DropdownMenuItem(value: 'en', child: Text('English')),
+                    DropdownMenuItem(value: 'uz', child: Text('O‘zbekcha')),
+                    DropdownMenuItem(value: 'ru', child: Text('Русский')),
+                  ],
+                  onChanged: (String? value) {
+                    if (value != null) {
+                      localizationProvider.setLocale(value);
+                    }
+                  },
                 ),
                 const SizedBox(
                   height: 38,

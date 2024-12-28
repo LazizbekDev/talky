@@ -5,6 +5,7 @@ import 'package:talky/localization/generated/localizations.dart';
 import 'package:talky/providers/auth_provider.dart';
 import 'package:talky/providers/chat_provider.dart';
 import 'package:talky/providers/user_provider.dart';
+import 'package:talky/providers/localization_provider.dart';
 import 'package:talky/routes/app_routes.dart';
 import 'package:talky/routes/route_names.dart';
 import 'package:talky/services/auth/firebase_auth_service.dart';
@@ -44,16 +45,23 @@ class App extends StatelessWidget {
             StorageService(),
           ),
         ),
+        ChangeNotifierProvider(
+          create: (_) => LocalizationProvider(),
+        ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'TALKY',
-        theme: appTheme(),
-        localizationsDelegates: L10n.localizationsDelegates,
-        supportedLocales: L10n.supportedLocales,
-        initialRoute: RouteNames.splash,
-        locale: const Locale('uz'),
-        onGenerateRoute: generateRoute,
+      child: Consumer<LocalizationProvider>(
+        builder: (context, localizationProvider, _) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'TALKY',
+            theme: appTheme(),
+            localizationsDelegates: L10n.localizationsDelegates,
+            supportedLocales: L10n.supportedLocales,
+            initialRoute: RouteNames.splash,
+            locale: localizationProvider.locale,
+            onGenerateRoute: generateRoute,
+          );
+        },
       ),
     );
   }
