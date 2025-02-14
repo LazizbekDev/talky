@@ -73,76 +73,77 @@ class Verify extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        margin: const EdgeInsets.only(
-          left: 28,
-          top: 26,
-          right: 28,
-          bottom: 100,
-        ),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Logo(
-                dark: true,
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Text(
-                locale.enterOTP,
-                style: textInter.copyWith(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                  color: AppColors.textPrimary,
+      body: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.only(
+            left: 28,
+            top: 26,
+            right: 28,
+            bottom: 100,
+          ),
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Logo(
+                  dark: true,
                 ),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              OtpPinField(
-                maxLength: 4,
-                fieldWidth: 50.0,
-                otpPinFieldStyle: const OtpPinFieldStyle(
-                  defaultFieldBorderColor: AppColors.lightGray,
-                  activeFieldBorderColor: AppColors.primaryColor,
-                  fieldBorderRadius: 8,
+                const SizedBox(
+                  height: 40,
                 ),
-                keyboardType: TextInputType.number,
-                otpPinFieldDecoration:
-                    OtpPinFieldDecoration.defaultPinBoxDecoration,
-                onSubmit: (String pin) {
-                  signUp(context);
-                },
-                onChange: (String text) {
-                  debugPrint("verify onChange");
-                },
-              ),
-              const Spacer(),
-              Button(
-                onPressed: () {
-                  debugPrint("Sign up button");
-                },
-                text: locale.signUp,
-                color: AppColors.primaryColor,
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Suggest(
-                login: false,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => SignIn(
-                        signIn: true,
-                      ),
+                Text(
+                  locale.enterOTP,
+                  style: textInter.copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  child: OtpPinField(
+                    maxLength: 4,
+                    fieldWidth: 50.0,
+                    otpPinFieldStyle: const OtpPinFieldStyle(
+                      defaultFieldBorderColor: AppColors.lightGray,
+                      activeFieldBorderColor: AppColors.primaryColor,
+                      fieldBorderRadius: 8,
                     ),
-                  );
-                },
-              ),
-            ],
+                    keyboardType: TextInputType.number,
+                    otpPinFieldDecoration:
+                        OtpPinFieldDecoration.defaultPinBoxDecoration,
+                    onSubmit: (String pin) {
+                      signUp(context);
+                    },
+                    onChange: (String text) {
+                      debugPrint("verify onChange");
+                    },
+                  ),
+                ),
+                Button(
+                  onPressed: () {
+                    debugPrint("Sign up button");
+                  },
+                  text: locale.signUp,
+                  color: AppColors.primaryColor,
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Suggest(
+                  login: false,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => SignIn(
+                          signIn: true,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

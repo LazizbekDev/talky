@@ -50,7 +50,11 @@ class App extends StatelessWidget {
         ),
       ],
       child: Consumer<LocalizationProvider>(
-        builder: (context, localizationProvider, _) {
+        builder: (
+          context,
+          localizationProvider,
+          _,
+        ) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'TALKY',

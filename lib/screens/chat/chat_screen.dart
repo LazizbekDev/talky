@@ -12,8 +12,8 @@ import 'package:talky/widgets/chat/chat_modal.dart';
 import 'package:talky/widgets/chat/user_list.dart';
 import 'package:talky/localization/localization.dart';
 
-class Chat extends StatelessWidget {
-  const Chat({super.key});
+class ChatScreen extends StatelessWidget {
+  const ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,8 @@ class Chat extends StatelessWidget {
                   }
 
                   if (snapshot.hasError) {
-                    return Center(child: Text('${locale.chatError} ${snapshot.error}'));
+                    return Center(
+                        child: Text('${locale.chatError} ${snapshot.error}'));
                   }
 
                   if (!snapshot.hasData || snapshot.data == null) {

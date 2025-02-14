@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:talky/routes/route_names.dart';
-import 'package:talky/screens/chat/chat.dart';
+import 'package:talky/screens/chat/chat_screen.dart';
 import 'package:talky/screens/chat/profile_detail.dart';
 import 'package:talky/screens/login/set_profile.dart';
 import 'package:talky/screens/login/sign_in.dart';
@@ -37,7 +37,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       );
 
     case RouteNames.chat:
-      return MaterialPageRoute(builder: (_) => const Chat());
+      return MaterialPageRoute(builder: (_) => const ChatScreen());
 
     default:
       return MaterialPageRoute(builder: (_) => const UserEntry());
