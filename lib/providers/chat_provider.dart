@@ -1,8 +1,10 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:talky/services/chat/chat_service.dart';
 import 'package:talky/services/storage_service.dart';
+import 'package:talky/status/provider_status.dart';
 
 class ChatProvider with ChangeNotifier {
   ChatProvider(
@@ -12,8 +14,12 @@ class ChatProvider with ChangeNotifier {
   final ChatService _chatService;
   final StorageService _storageService;
 
+  ProviderStatus getChatDetailStatus = ProviderStatus.initial;
+
+  Stream<List<Map<String, dynamic>>>? messages;
+
   List<Map<String, dynamic>> _messages = [];
-  List<Map<String, dynamic>> get messages => _messages;
+  List<Map<String, dynamic>> get messagesGetter => _messages;
 
   String chatRoomId = '';
   Future<void> ensureChatRoomId(String chatPartnerId) async {
@@ -32,6 +38,7 @@ class ChatProvider with ChangeNotifier {
     notifyListeners();
     chatRoomId = await _chatService.initializeChatRoom(chatPartnerId);
     debugPrint('ChatRoom ID initialized: $chatRoomId');
+    getChatMessagesStream();
   }
 
   Future<void> sendMessage({
@@ -87,5 +94,25 @@ class ChatProvider with ChangeNotifier {
     await ensureChatRoomId(chatPartnerId);
 
     yield* _chatService.getLastMessageStream(chatRoomId);
+  }
+
+  void getChatMessagesStream() {
+    getChatDetailStatus = ProviderStatus.loading;
+    notifyListeners();
+    messages = FirebaseFirestore.instance
+        .collection('chatRooms')
+        .doc(chatRoomId)
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map(
+                (e) => e.data(),
+              )
+              .toList(),
+        );
+    getChatDetailStatus = ProviderStatus.loaded;
+    notifyListeners();
   }
 }

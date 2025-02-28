@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:talky/routes/route_names.dart';
+import 'package:talky/status/provider_status.dart';
 import 'package:talky/widgets/chat/message_box.dart';
 import 'package:talky/widgets/chat/profile_bar.dart';
 import 'package:talky/widgets/chat/send_data.dart';
@@ -91,7 +92,6 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final chatProvider = Provider.of<ChatProvider>(context);
     List allImages = [];
     return Scaffold(
       appBar: ProfileBar(
@@ -120,91 +120,110 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
           child: Column(
             children: [
               Expanded(
-                child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('chatRooms')
-                      .doc(chatProvider.chatRoomId)
-                      .collection('messages')
-                      .orderBy('timestamp', descending: true)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
+                child: Consumer<ChatProvider>(
+                  builder: (
+                    context,
+                    provider,
+                    child,
+                  ) {
+                    if (provider.getChatDetailStatus ==
+                        ProviderStatus.loading) {
                       return const Center(child: CircularProgressIndicator());
-                    }
+                    } else if (provider.getChatDetailStatus ==
+                        ProviderStatus.error) {
+                      return const Center(child: Text('Error loading chat'));
+                    } else if (provider.getChatDetailStatus ==
+                        ProviderStatus.loaded) {
+                      return StreamBuilder(
+                        stream: provider.messages,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
 
-                    final messages = snapshot.data?.docs;
-                    String? previousDate;
+                          final List<Map<String, dynamic>>? messages =
+                              snapshot.data;
+                          String? previousDate;
 
-                    return ListView.builder(
-                      reverse: true,
-                      itemCount: messages?.length,
-                      itemBuilder: (context, index) {
-                        final message = messages?[index].data();
-                        final String fileUrl = message?['fileUrl'] ?? "";
+                          return ListView.builder(
+                            reverse: true,
+                            itemCount: messages?.length,
+                            itemBuilder: (context, index) {
+                              final message = messages?[index];
+                              final String fileUrl = message?['fileUrl'] ?? "";
 
-                        final bool isImage =
-                            extractFileType(fileUrl) == 'image';
+                              final bool isImage =
+                                  extractFileType(fileUrl) == 'image';
 
-                        final List<String> imageUrls = isImage ? [fileUrl] : [];
+                              final List<String> imageUrls =
+                                  isImage ? [fileUrl] : [];
 
-                        if (isImage) {
-                          allImages.add(fileUrl);
-                        }
+                              if (isImage) {
+                                allImages.add(fileUrl);
+                              }
 
-                        final isMe = message?['senderId'] ==
-                            FirebaseAuth.instance.currentUser?.uid;
-                        final Timestamp? timestamp =
-                            message?['timestamp'] as Timestamp?;
+                              final isMe = message?['senderId'] ==
+                                  FirebaseAuth.instance.currentUser?.uid;
+                              final Timestamp? timestamp =
+                                  message?['timestamp'] as Timestamp?;
 
-                        DateTime messageDate = timestamp != null
-                            ? timestamp.toDate()
-                            : DateTime.now();
+                              DateTime messageDate = timestamp != null
+                                  ? timestamp.toDate()
+                                  : DateTime.now();
 
-                        final String formattedDate =
-                            DateFormat('MMM dd, yyyy').format(messageDate);
+                              final String formattedDate =
+                                  DateFormat('MMM dd, yyyy')
+                                      .format(messageDate);
 
-                        bool showDateHeader = false;
+                              bool showDateHeader = false;
 
-                        if (previousDate == null ||
-                            previousDate != formattedDate) {
-                          showDateHeader = true;
-                          previousDate = formattedDate;
-                        }
+                              if (previousDate == null ||
+                                  previousDate != formattedDate) {
+                                showDateHeader = true;
+                                previousDate = formattedDate;
+                              }
 
-                        return Column(
-                          children: [
-                            if (showDateHeader)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: Text(
-                                  formattedDate,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.grey,
+                              return Column(
+                                children: [
+                                  if (showDateHeader)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      child: Text(
+                                        formattedDate,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  Align(
+                                    alignment: isMe
+                                        ? Alignment.centerRight
+                                        : Alignment.centerLeft,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: MessageBox(
+                                        sender: isMe,
+                                        message: message?['message'] ?? '',
+                                        timestamp: messageDate,
+                                        imageUrls: imageUrls,
+                                        fileUrl: isImage ? '' : fileUrl,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            Align(
-                              alignment: isMe
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: MessageBox(
-                                  sender: isMe,
-                                  message: message?['message'] ?? '',
-                                  timestamp: messageDate,
-                                  imageUrls: imageUrls,
-                                  fileUrl: isImage ? '' : fileUrl,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
                   },
                 ),
               ),
