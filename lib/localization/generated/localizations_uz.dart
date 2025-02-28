@@ -2,8 +2,6 @@
 
 import 'localizations.dart';
 
-// ignore_for_file: type=lint
-
 /// The translations for Uzbek (`uz`).
 class L10nUz extends L10n {
   L10nUz([String locale = 'uz']) : super(locale);

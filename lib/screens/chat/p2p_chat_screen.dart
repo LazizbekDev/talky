@@ -190,7 +190,8 @@ class _P2PChatScreenState extends State<P2PChatScreen> {
                                   if (showDateHeader)
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          vertical: 10),
+                                        vertical: 10,
+                                      ),
                                       child: Text(
                                         formattedDate,
                                         style: const TextStyle(

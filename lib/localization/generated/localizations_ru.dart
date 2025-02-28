@@ -2,8 +2,6 @@
 
 import 'localizations.dart';
 
-// ignore_for_file: type=lint
-
 /// The translations for Russian (`ru`).
 class L10nRu extends L10n {
   L10nRu([String locale = 'ru']) : super(locale);
